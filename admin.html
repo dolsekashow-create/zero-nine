@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم — Zero-Nine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0d0a00;--gold:#c9a84c;--gold2:#f0d080;--gold3:#8b6914;
+  --dark:#1a1200;--white:#f5e8c8;--muted:#8a7340;
+  --card-bg:rgba(201,168,76,0.05);--card-border:rgba(201,168,76,0.2);
+  --danger:#e74c3c;--success:#27ae60;
+}
+html,body{min-height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:var(--white);}
+body{padding:20px;}
+
+.admin-header{
+  text-align:center;padding:30px 20px;margin-bottom:30px;
+  border-bottom:2px solid var(--gold);
+}
+.admin-header h1{font-size:1.8rem;color:var(--gold);margin-bottom:8px;}
+.admin-header p{color:var(--muted);font-size:.9rem;}
+.admin-header a{color:var(--gold2);text-decoration:none;font-weight:700;}
+
+.panel{
+  max-width:900px;margin:0 auto 30px;
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:12px;overflow:hidden;
+}
+.panel-title{
+  padding:16px 24px;font-size:1.1rem;font-weight:700;color:var(--gold);
+  background:rgba(201,168,76,0.08);border-bottom:1px solid var(--card-border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.panel-body{padding:24px;}
+
+label{display:block;color:var(--gold2);font-weight:600;margin-bottom:6px;font-size:.85rem;}
+input[type="text"],input[type="url"],input[type="number"],textarea{
+  width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);
+  border:1px solid var(--card-border);border-radius:8px;color:var(--white);
+  font-family:'Cairo',sans-serif;font-size:.9rem;margin-bottom:16px;
+  transition:border-color .3s;
+}
+input:focus,textarea:focus{outline:none;border-color:var(--gold);}
+textarea{min-height:80px;resize:vertical;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:10px 22px;border:none;border-radius:8px;
+  font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;
+  cursor:pointer;transition:all .3s;
+}
+.btn-gold{background:var(--gold);color:var(--bg);}
+.btn-gold:hover{background:var(--gold2);}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{background:#c0392b;}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+.btn-outline:hover{background:rgba(201,168,76,0.1);}
+.btn-sm{padding:6px 14px;font-size:.78rem;}
+
+.project-card{
+  background:rgba(0,0,0,0.3);border:1px solid var(--card-border);
+  border-radius:10px;padding:16px;margin-bottom:16px;
+  display:grid;grid-template-columns:120px 1fr auto;gap:16px;align-items:center;
+}
+.project-card img{
+  width:120px;height:70px;object-fit:cover;border-radius:6px;
+  border:1px solid var(--card-border);
+}
+.project-info{min-width:0;}
+.project-info h4{color:var(--white);margin-bottom:4px;font-size:.95rem;}
+.project-info p{color:var(--muted);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.project-actions{display:flex;flex-direction:column;gap:6px;}
+
+.add-form{
+  background:rgba(201,168,76,0.03);border:1px dashed var(--card-border);
+  border-radius:10px;padding:20px;margin-top:16px;
+}
+.add-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+  padding:12px 28px;background:var(--success);color:#fff;
+  border-radius:8px;font-weight:700;font-size:.9rem;
+  opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;
+}
+.toast.show{opacity:1;}
+
+@media(max-width:600px){
+  .project-card{grid-template-columns:1fr;text-align:center;}
+  .project-card img{width:100%;height:120px;margin:0 auto;}
+  .project-actions{flex-direction:row;justify-content:center;}
+  .add-form .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD OVERLAY -->
+<div id="passOverlay" style="position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;">
+  <div style="text-align:center;max-width:360px;padding:40px 30px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;">
+    <div style="font-size:2.5rem;margin-bottom:12px;">𓂀</div>
+    <h2 style="color:var(--gold);margin-bottom:8px;">لوحة التحكم</h2>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:20px;">أدخل كلمة المرور للدخول</p>
+    <input type="password" id="passInput" placeholder="كلمة المرور" style="width:100%;padding:12px 16px;background:rgba(0,0,0,0.5);border:1px solid var(--card-border);border-radius:8px;color:var(--white);font-family:'Cairo',sans-serif;font-size:1rem;text-align:center;margin-bottom:12px;" onkeydown="if(event.key==='Enter')checkPass()">
+    <div id="passError" style="color:var(--danger);font-size:.8rem;margin-bottom:12px;display:none;">كلمة المرور غلط!</div>
+    <button class="btn btn-gold" onclick="checkPass()" style="width:100%;justify-content:center;font-size:1rem;padding:12px;">دخول</button>
+  </div>
+</div>
+<script>
+var ADMIN_PASS = 'Zero-Nine2025';
+function checkPass(){
+  var v = document.getElementById('passInput').value;
+  if(v === ADMIN_PASS){
+    document.getElementById('passOverlay').style.display='none';
+    try{sessionStorage.setItem('zn_auth','1');}catch(e){}
+  } else {
+    document.getElementById('passError').style.display='block';
+    document.getElementById('passInput').value='';
+    document.getElementById('passInput').focus();
+  }
+}
+// Auto-login if session valid
+try{if(sessionStorage.getItem('zn_auth')==='1') document.getElementById('passOverlay').style.display='none';}catch(e){}
+</script>
+
+<div class="admin-header">
+  <h1>𓂀 لوحة تحكم Zero-Nine</h1>
+  <p>إدارة محتوى الموقع بالكامل — <a href="index.html" target="_blank">معاينة الموقع ←</a></p>
+</div>
+
+<!-- ══════ HERO SECTION ══════ -->
+<div class="panel">
+  <div class="panel-title">صورة الهيرو (Hero Image) — Supabase</div>
+  <div class="panel-body">
+    <div id="heroImagePreview" style="margin-bottom:16px;text-align:center;">
+      <img id="heroImgPreview" src="" style="max-width:100%;max-height:200px;border-radius:10px;border:1px solid var(--card-border);display:none;">
+      <p id="heroImgPlaceholder" style="color:var(--muted);padding:40px;border:2px dashed var(--card-border);border-radius:10px;">لا توجد صورة هيرو حالياً</p>
+    </div>
+    <label>اختر صورة الهيرو</label>
+    <input type="file" id="heroImageFile" accept="image/*" style="width:100%;padding:10px;background:rgba(0,0,0,0.4);border:1px solid var(--card-border);border-radius:8px;color:var(--white);margin-bottom:12px;">
+    <div id="uploadProgress" style="display:none;margin-bottom:12px;">
+      <div style="background:rgba(0,0,0,0.4);border-radius:8px;height:8px;overflow:hidden;">
+        <div id="uploadBar" style="width:0%;height:100%;background:var(--gold);transition:width .3s;border-radius:8px;"></div>
+      </div>
+      <p style="color:var(--muted);font-size:.78rem;margin-top:4px;" id="uploadStatus">جاري الرفع...</p>
+    </div>
+    <button class="btn btn-gold" onclick="uploadHeroImage()">📤 رفع الصورة لـ Supabase</button>
+    <div id="heroImageUrl" style="margin-top:12px;display:none;">
+      <label>رابط الصورة</label>
+      <input type="text" id="heroImgUrl" readonly dir="ltr" style="background:rgba(0,0,0,0.6);cursor:pointer;" onclick="this.select();document.execCommand('copy');showToast('تم نسخ الرابط ✓')">
+    </div>
+  </div>
+</div>
+
+<!-- ══════ HERO SECTION ══════ -->
+<div class="panel">
+  <div class="panel-title">قسم الهيرو (Hero)</div>
+  <div class="panel-body">
+    <label>العنوان الرئيسي (HTML مسموح)</label>
+    <textarea id="heroTitle"></textarea>
+    <label>الوصف</label>
+    <textarea id="heroSub"></textarea>
+    <label>نص زر CTA الأول</label>
+    <input type="text" id="ctaPrimary">
+    <label>نص زر CTA الثاني</label>
+    <input type="text" id="ctaSecondary">
+    <button class="btn btn-gold" onclick="saveHero()">💾 حفظ الهيرو</button>
+  </div>
+</div>
+
+<!-- ══════ STATS ══════ -->
+<div class="panel">
+  <div class="panel-title">الإحصائيات</div>
+  <div class="panel-body" id="statsPanel">
+    <!-- filled by JS -->
+    <button class="btn btn-gold" onclick="saveStats()">💾 حفظ الإحصائيات</button>
+  </div>
+</div>
+
+<!-- ══════ PROJECTS (أعمالنا) ══════ -->
+<div class="panel">
+  <div class="panel-title">
+    <span>قسم أعمالنا</span>
+    <button class="btn btn-outline btn-sm" onclick="toggleAddForm()">+ إضافة مشروع</button>
+  </div>
+  <div class="panel-body">
+    <div id="projectsList"></div>
+    <div id="addProjectForm" class="add-form" style="display:none;">
+      <h4 style="color:var(--gold);margin-bottom:12px;">إضافة مشروع جديد</h4>
+      <div class="form-row">
+        <div>
+          <label>اسم المشروع</label>
+          <input type="text" id="newProjName" placeholder="مثال: موب قليوب">
+        </div>
+        <div>
+          <label>التصنيف</label>
+          <input type="text" id="newProjTag" placeholder="مثال: تطبيق ويب">
+        </div>
+      </div>
+      <label>رابط الموقع</label>
+      <input type="url" id="newProjUrl" placeholder="https://example.com" dir="ltr">
+      <label>صورة المشروع (من جهازك)</label>
+      <input type="file" id="newProjImage" accept="image/*" style="width:100%;padding:10px;background:rgba(0,0,0,0.4);border:1px solid var(--card-border);border-radius:8px;color:var(--white);margin-bottom:8px;">
+      <div id="projUploadProgress" style="display:none;margin-bottom:12px;">
+        <div style="background:rgba(0,0,0,0.4);border-radius:8px;height:6px;overflow:hidden;">
+          <div id="projUploadBar" style="width:0%;height:100%;background:var(--gold);transition:width .3s;border-radius:8px;"></div>
+        </div>
+        <p style="color:var(--muted);font-size:.75rem;margin-top:4px;" id="projUploadStatus">جاري رفع الصورة...</p>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button class="btn btn-gold" onclick="addProject()">✅ إضافة</button>
+        <button class="btn btn-outline" onclick="toggleAddForm()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ FEATURES ══════ -->
+<div class="panel">
+  <div class="panel-title">قسم المميزات</div>
+  <div class="panel-body" id="featuresPanel">
+    <button class="btn btn-gold" onclick="saveFeatures()">💾 حفظ المميزات</button>
+  </div>
+</div>
+
+<!-- ══════ PRICING ══════ -->
+<div class="panel">
+  <div class="panel-title">قسم الباقات والأسعار (3 باقات)</div>
+  <div class="panel-body" id="pricingPanel">
+    <!-- Filled by JS -->
+    <button class="btn btn-gold" onclick="savePricing()">💾 حفظ الأسعار</button>
+  </div>
+</div>
+
+<!-- ══════ CONTACT ══════ -->
+<div class="panel">
+  <div class="panel-title">قسم التواصل</div>
+  <div class="panel-body">
+    <label>رقم واتساب</label>
+    <input type="text" id="whatsapp" dir="ltr">
+    <label>رقم فودافون كاش</label>
+    <input type="text" id="vodafone" dir="ltr">
+    <label>رابط فيسبوك</label>
+    <input type="url" id="facebook" dir="ltr">
+    <button class="btn btn-gold" onclick="saveContact()">💾 حفظ التواصل</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">تم الحفظ بنجاح ✓</div>
+
+<script>
+// ── Utility ──
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg||'تم الحفظ بنجاح ✓';
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2000);
+}
+function getLS(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def;}catch(e){return def;}}
+function setLS(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+
+// ══════ SUPABASE CONFIG ══════
+var SB_URL = 'https://aeizymcxnhypvmsdpjum.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlaXp5bWN4bmh5cHZtc2RwanVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MzIwNjMsImV4cCI6MjA5MDAwODA2M30.J-3YT_hh_KCksLgWKYDtBFbgE456482fzZawDU6nvds';
+var SB_HEADERS = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+// ══════ PROJECTS (Supabase) ══════
+var projects = [];
+
+async function loadProjects(){
+  try {
+    var res = await fetch(SB_URL + '/rest/v1/projects?select=*&order=sort_order.asc', {headers: SB_HEADERS});
+    if(!res.ok) throw new Error('Failed: ' + res.status);
+    projects = await res.json();
+  } catch(e){
+    console.error('Load projects error:', e);
+    projects = [];
+  }
+  renderProjects();
+}
+
+function renderProjects(){
+  var html='';
+  projects.forEach(function(p,i){
+    html+='<div class="project-card" id="pcard-'+p.id+'" style="grid-template-columns:120px 1fr auto;">';
+    // Image with upload overlay
+    html+='<div style="position:relative;cursor:pointer;" onclick="document.getElementById(\'projImg'+p.id+'\').click()">';
+    html+='<img src="'+(p.image||'')+'" onerror="this.src=\'https://via.placeholder.com/120x70/1a1200/c9a84c?text=No+Image\'" alt="">';
+    html+='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);opacity:0;transition:opacity .2s;border-radius:6px;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0"><span style="color:#fff;font-size:.7rem;">📷 تغيير</span></div>';
+    html+='<input type="file" id="projImg'+p.id+'" accept="image/*" style="display:none;" onchange="changeProjectImage('+p.id+',this)">';
+    html+='</div>';
+    // Info (view mode)
+    html+='<div class="project-info" id="pview-'+p.id+'">';
+    html+='<h4>'+p.name+'</h4><p>'+p.url+'</p><p style="color:var(--gold);font-size:.75rem;">'+p.tag+'</p>';
+    html+='</div>';
+    // Edit form (hidden)
+    html+='<div id="pedit-'+p.id+'" style="display:none;min-width:0;">';
+    html+='<input type="text" id="eName-'+p.id+'" value="'+(p.name||'')+'" placeholder="اسم المشروع" style="margin-bottom:6px;padding:6px 10px;font-size:.82rem;">';
+    html+='<input type="text" id="eTag-'+p.id+'" value="'+(p.tag||'')+'" placeholder="التصنيف" style="margin-bottom:6px;padding:6px 10px;font-size:.82rem;">';
+    html+='<input type="url" id="eUrl-'+p.id+'" value="'+(p.url||'')+'" placeholder="الرابط" dir="ltr" style="margin-bottom:6px;padding:6px 10px;font-size:.82rem;">';
+    html+='<div style="display:flex;gap:6px;"><button class="btn btn-gold btn-sm" onclick="saveEditProject('+p.id+')">💾 حفظ</button><button class="btn btn-outline btn-sm" onclick="cancelEditProject('+p.id+')">إلغاء</button></div>';
+    html+='</div>';
+    // Actions
+    html+='<div class="project-actions">';
+    html+='<button class="btn btn-outline btn-sm" onclick="startEditProject('+p.id+')" id="editBtn-'+p.id+'">✏️ تعديل</button>';
+    html+='<button class="btn btn-danger btn-sm" onclick="removeProject('+p.id+')">🗑 حذف</button>';
+    if(i>0) html+='<button class="btn btn-outline btn-sm" onclick="moveProject('+i+',-1)">↑</button>';
+    if(i<projects.length-1) html+='<button class="btn btn-outline btn-sm" onclick="moveProject('+i+',1)">↓</button>';
+    html+='</div></div>';
+  });
+  if(!projects.length) html='<p style="color:var(--muted);text-align:center;padding:20px;">لا توجد مشاريع بعد. أضف مشروعك الأول!</p>';
+  document.getElementById('projectsList').innerHTML=html;
+}
+
+function startEditProject(id){
+  document.getElementById('pview-'+id).style.display='none';
+  document.getElementById('pedit-'+id).style.display='block';
+  document.getElementById('editBtn-'+id).style.display='none';
+}
+
+function cancelEditProject(id){
+  document.getElementById('pview-'+id).style.display='';
+  document.getElementById('pedit-'+id).style.display='none';
+  document.getElementById('editBtn-'+id).style.display='';
+}
+
+async function saveEditProject(id){
+  var name = document.getElementById('eName-'+id).value.trim();
+  var tag = document.getElementById('eTag-'+id).value.trim();
+  var url = document.getElementById('eUrl-'+id).value.trim();
+  if(!name){showToast('⚠ الاسم مطلوب');return;}
+  try {
+    var res = await fetch(SB_URL + '/rest/v1/projects?id=eq.' + id, {
+      method:'PATCH', headers: SB_HEADERS,
+      body: JSON.stringify({name:name, tag:tag, url:url})
+    });
+    if(!res.ok) throw new Error('Update failed');
+    showToast('تم تحديث المشروع ✓');
+    await loadProjects();
+  } catch(e){ showToast('⚠ خطأ: '+e.message); }
+}
+
+async function changeProjectImage(projectId, input){
+  if(!input.files.length) return;
+  try {
+    showToast('جاري رفع الصورة...');
+    var imageUrl = await uploadProjectImage(input.files[0]);
+    var res = await fetch(SB_URL + '/rest/v1/projects?id=eq.' + projectId, {
+      method:'PATCH', headers: SB_HEADERS,
+      body: JSON.stringify({image: imageUrl})
+    });
+    if(!res.ok) throw new Error('Update failed');
+    showToast('تم تحديث الصورة ✓');
+    await loadProjects();
+  } catch(e){ showToast('⚠ خطأ: '+e.message); }
+}
+
+async function uploadProjectImage(file){
+  var ext = file.name.split('.').pop();
+  var fileName = 'proj-' + Date.now() + '.' + ext;
+  var uploadUrl = SB_URL + '/storage/v1/object/project-images/' + fileName;
+  var res = await fetch(uploadUrl, {
+    method:'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': file.type,
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if(!res.ok){
+    var err = await res.json().catch(function(){return {};});
+    throw new Error(err.message || err.error || 'Upload failed');
+  }
+  return SB_URL + '/storage/v1/object/public/project-images/' + fileName;
+}
+
+async function addProject(){
+  var name=document.getElementById('newProjName').value.trim();
+  var tag=document.getElementById('newProjTag').value.trim();
+  var url=document.getElementById('newProjUrl').value.trim();
+  var fileInput=document.getElementById('newProjImage');
+  if(!name||!url){showToast('⚠ الاسم والرابط مطلوبين');return;}
+
+  var image = '';
+  // Upload image if selected
+  if(fileInput.files.length){
+    try {
+      document.getElementById('projUploadProgress').style.display='block';
+      document.getElementById('projUploadBar').style.width='50%';
+      document.getElementById('projUploadStatus').textContent='جاري رفع الصورة...';
+      image = await uploadProjectImage(fileInput.files[0]);
+      document.getElementById('projUploadBar').style.width='100%';
+      document.getElementById('projUploadStatus').textContent='تم رفع الصورة ✓';
+    } catch(e){
+      document.getElementById('projUploadStatus').textContent='❌ فشل رفع الصورة: '+e.message;
+      showToast('⚠ فشل رفع الصورة');
+      return;
+    }
+  }
+
+  var maxOrder = projects.length ? Math.max.apply(null, projects.map(function(p){return p.sort_order||0;})) : 0;
+  try {
+    var res = await fetch(SB_URL + '/rest/v1/projects', {
+      method:'POST', headers: SB_HEADERS,
+      body: JSON.stringify({name:name,tag:tag||'مشروع',url:url,image:image,sort_order:maxOrder+1})
+    });
+    if(!res.ok) throw new Error('Insert failed');
+    document.getElementById('newProjName').value='';
+    document.getElementById('newProjTag').value='';
+    document.getElementById('newProjUrl').value='';
+    fileInput.value='';
+    document.getElementById('addProjectForm').style.display='none';
+    document.getElementById('projUploadProgress').style.display='none';
+    showToast('تم إضافة المشروع ✓');
+    await loadProjects();
+  } catch(e){ showToast('⚠ خطأ: '+e.message); }
+}
+
+async function removeProject(id){
+  if(!confirm('هل أنت متأكد من حذف هذا المشروع؟')) return;
+  try {
+    var res = await fetch(SB_URL + '/rest/v1/projects?id=eq.' + id, {
+      method:'DELETE', headers: SB_HEADERS
+    });
+    if(!res.ok) throw new Error('Delete failed');
+    showToast('تم حذف المشروع');
+    await loadProjects();
+  } catch(e){ showToast('⚠ خطأ: '+e.message); }
+}
+
+async function moveProject(index, dir){
+  var j = index + dir;
+  if(j < 0 || j >= projects.length) return;
+  var a = projects[index], b = projects[j];
+  try {
+    await fetch(SB_URL + '/rest/v1/projects?id=eq.' + a.id, {
+      method:'PATCH', headers: SB_HEADERS,
+      body: JSON.stringify({sort_order: b.sort_order})
+    });
+    await fetch(SB_URL + '/rest/v1/projects?id=eq.' + b.id, {
+      method:'PATCH', headers: SB_HEADERS,
+      body: JSON.stringify({sort_order: a.sort_order})
+    });
+    await loadProjects();
+  } catch(e){ showToast('⚠ خطأ: '+e.message); }
+}
+
+function toggleAddForm(){
+  var f=document.getElementById('addProjectForm');
+  f.style.display=f.style.display==='none'?'block':'none';
+}
+
+// ══════ HERO ══════
+function loadHero(){
+  var h=getLS('zn_hero',{
+    title:'نصنع مواقع تليق<br>بـ<span class="highlight">عظمة فرعون</span>',
+    sub:'Zero-Nine — وكالة تصميم وتطوير مواقع احترافية. نجمع بين الحضارة المصرية الأصيلة والتكنولوجيا الحديثة لنصنع لك حضوراً رقمياً لا يُنسى.',
+    ctaPrimary:'🚀 اطلب موقعك دلوقتي',
+    ctaSecondary:'شوف أعمالنا'
+  });
+  document.getElementById('heroTitle').value=h.title;
+  document.getElementById('heroSub').value=h.sub;
+  document.getElementById('ctaPrimary').value=h.ctaPrimary;
+  document.getElementById('ctaSecondary').value=h.ctaSecondary;
+}
+function saveHero(){
+  setLS('zn_hero',{
+    title:document.getElementById('heroTitle').value,
+    sub:document.getElementById('heroSub').value,
+    ctaPrimary:document.getElementById('ctaPrimary').value,
+    ctaSecondary:document.getElementById('ctaSecondary').value
+  });
+  showToast();
+}
+
+// ══════ STATS ══════
+function loadStats(){
+  var stats=getLS('zn_stats',[
+    {target:'50',suffix:'+',label:'مشروع منجز'},
+    {target:'100',suffix:'%',label:'رضا العملاء'},
+    {target:'3',suffix:' سنين',label:'خبرة'}
+  ]);
+  var html='';
+  stats.forEach(function(s,i){
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">';
+    html+='<div><label>الرقم '+(i+1)+'</label><input type="text" class="stat-target" value="'+s.target+'"></div>';
+    html+='<div><label>اللاحقة</label><input type="text" class="stat-suffix" value="'+s.suffix+'"></div>';
+    html+='<div><label>الوصف</label><input type="text" class="stat-label" value="'+s.label+'"></div>';
+    html+='</div>';
+  });
+  var btn=document.querySelector('#statsPanel .btn');
+  document.getElementById('statsPanel').innerHTML=html;
+  document.getElementById('statsPanel').appendChild(btn||document.createElement('span'));
+  // re-add button
+  if(!document.querySelector('#statsPanel .btn')){
+    var b=document.createElement('button');
+    b.className='btn btn-gold';b.onclick=saveStats;b.textContent='💾 حفظ الإحصائيات';
+    document.getElementById('statsPanel').appendChild(b);
+  }
+}
+function saveStats(){
+  var targets=document.querySelectorAll('.stat-target');
+  var suffixes=document.querySelectorAll('.stat-suffix');
+  var labels=document.querySelectorAll('.stat-label');
+  var stats=[];
+  targets.forEach(function(t,i){
+    stats.push({target:t.value,suffix:suffixes[i].value,label:labels[i].value});
+  });
+  setLS('zn_stats',stats);
+  showToast();
+}
+
+// ══════ FEATURES ══════
+function loadFeatures(){
+  var feats=getLS('zn_features',[
+    {icon:'𓂀',title:'تصميم فاخر ومتجاوب',desc:'موقع احترافي بتصميم عالمي متجاوب بالكامل'},
+    {icon:'📸',title:'صور ومحتوى حقيقي',desc:'استخدام صور احترافية ومحتوى مناسب لمجالك'},
+    {icon:'💬',title:'واتساب عائم + فورم تواصل',desc:'زر واتساب طائر يظهر في كل صفحات الموقع'},
+    {icon:'🌐',title:'دومين .com مجاناً',desc:'احصل على اسم نطاق خاص بيك'},
+    {icon:'📱',title:'متجاوب 100%',desc:'الموقع يشتغل بكفاءة عالية على كل الأجهزة'},
+    {icon:'𓆣',title:'دعم فني مجاني 3 شهور',desc:'دعم فني متاح 24 ساعة لمدة 3 شهور'}
+  ]);
+  var html='';
+  feats.forEach(function(f,i){
+    html+='<div style="background:rgba(0,0,0,.2);padding:12px;border-radius:8px;margin-bottom:12px;border:1px solid var(--card-border);">';
+    html+='<div style="display:grid;grid-template-columns:60px 1fr;gap:12px;">';
+    html+='<div><label>أيقونة</label><input type="text" class="feat-icon" value="'+f.icon+'" style="text-align:center;font-size:1.2rem;"></div>';
+    html+='<div><label>العنوان</label><input type="text" class="feat-title" value="'+f.title+'"></div>';
+    html+='</div>';
+    html+='<label>الوصف</label><input type="text" class="feat-desc" value="'+f.desc+'">';
+    html+='</div>';
+  });
+  var panel=document.getElementById('featuresPanel');
+  var btn=panel.querySelector('.btn');
+  panel.innerHTML=html;
+  panel.appendChild(btn);
+}
+function saveFeatures(){
+  var icons=document.querySelectorAll('.feat-icon');
+  var titles=document.querySelectorAll('.feat-title');
+  var descs=document.querySelectorAll('.feat-desc');
+  var feats=[];
+  icons.forEach(function(ic,i){
+    feats.push({icon:ic.value,title:titles[i].value,desc:descs[i].value});
+  });
+  setLS('zn_features',feats);
+  showToast();
+}
+
+// ══════ PRICING (3 packages) ══════
+function loadPricing(){
+  var pkgs=getLS('zn_packages',[
+    {badge:'🎓 مشروع التخرج',oldPrice:'4750 جنيه',price:'1500',note:'الباقة المثالية لمشاريع التخرج الجامعية',delivery:'التسليم من 2 لـ 5 أيام'},
+    {badge:'🛒 متجر إلكتروني',oldPrice:'5800 جنيه',price:'3500',note:'الأنسب للمتاجر والأنشطة التجارية',delivery:'التسليم من 2 لـ 5 أيام'},
+    {badge:'🏢 سيستم الشركات',oldPrice:'10850 جنيه',price:'6500',note:'الحل المتكامل للشركات والمؤسسات',delivery:'التسليم من 2 لـ 5 أيام'}
+  ]);
+  var html='';
+  pkgs.forEach(function(p,i){
+    html+='<div style="background:rgba(0,0,0,.2);padding:16px;border-radius:10px;margin-bottom:16px;border:1px solid var(--card-border);">';
+    html+='<h4 style="color:var(--gold);margin-bottom:12px;">الباقة '+(i+1)+': '+p.badge+'</h4>';
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">';
+    html+='<div><label>اسم الباقة (مع أيقونة)</label><input type="text" class="pkg-badge" value="'+p.badge+'"></div>';
+    html+='<div><label>السعر الأصلي</label><input type="text" class="pkg-old" value="'+p.oldPrice+'"></div>';
+    html+='</div>';
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">';
+    html+='<div><label>السعر الحالي</label><input type="text" class="pkg-price" value="'+p.price+'"></div>';
+    html+='<div><label>مدة التسليم</label><input type="text" class="pkg-delivery" value="'+p.delivery+'"></div>';
+    html+='</div>';
+    html+='<label>ملاحظة</label><input type="text" class="pkg-note" value="'+p.note+'">';
+    html+='</div>';
+  });
+  var panel=document.getElementById('pricingPanel');
+  var btn=panel.querySelector('.btn');
+  panel.innerHTML=html;
+  panel.appendChild(btn);
+}
+function savePricing(){
+  var badges=document.querySelectorAll('.pkg-badge');
+  var olds=document.querySelectorAll('.pkg-old');
+  var prices=document.querySelectorAll('.pkg-price');
+  var deliveries=document.querySelectorAll('.pkg-delivery');
+  var notes=document.querySelectorAll('.pkg-note');
+  var pkgs=[];
+  badges.forEach(function(b,i){
+    pkgs.push({badge:b.value,oldPrice:olds[i].value,price:prices[i].value,delivery:deliveries[i].value,note:notes[i].value});
+  });
+  setLS('zn_packages',pkgs);
+  showToast();
+}
+
+// ══════ CONTACT ══════
+function loadContact(){
+  var c=getLS('zn_contact',{
+    whatsapp:'01125472449',
+    vodafone:'01025256462',
+    facebook:'https://www.facebook.com/profile.php?id=61585099956284'
+  });
+  document.getElementById('whatsapp').value=c.whatsapp;
+  document.getElementById('vodafone').value=c.vodafone;
+  document.getElementById('facebook').value=c.facebook;
+}
+function saveContact(){
+  setLS('zn_contact',{
+    whatsapp:document.getElementById('whatsapp').value,
+    vodafone:document.getElementById('vodafone').value,
+    facebook:document.getElementById('facebook').value
+  });
+  showToast();
+}
+
+// ══════ SUPABASE HERO IMAGE UPLOAD ══════
+var BUCKET = 'hero-images';
+
+function loadHeroImage(){
+  var url = getLS('zn_hero_image','');
+  if(url){
+    document.getElementById('heroImgPreview').src = url;
+    document.getElementById('heroImgPreview').style.display = 'block';
+    document.getElementById('heroImgPlaceholder').style.display = 'none';
+    document.getElementById('heroImageUrl').style.display = 'block';
+    document.getElementById('heroImgUrl').value = url;
+  }
+}
+
+async function uploadHeroImage(){
+  var fileInput = document.getElementById('heroImageFile');
+  if(!fileInput.files.length){showToast('⚠ اختر صورة الأول');return;}
+
+  var file = fileInput.files[0];
+  var ext = file.name.split('.').pop();
+  var fileName = 'hero-' + Date.now() + '.' + ext;
+
+  document.getElementById('uploadProgress').style.display = 'block';
+  document.getElementById('uploadBar').style.width = '30%';
+  document.getElementById('uploadStatus').textContent = 'جاري الرفع...';
+
+  try {
+    // Upload to Supabase Storage
+    var uploadUrl = SB_URL + '/storage/v1/object/' + BUCKET + '/' + fileName;
+    var response = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': file.type,
+        'x-upsert': 'true'
+      },
+      body: file
+    });
+
+    document.getElementById('uploadBar').style.width = '70%';
+
+    if(!response.ok){
+      var errData = await response.json().catch(function(){return {};});
+      throw new Error(errData.message || errData.error || 'Upload failed: ' + response.status);
+    }
+
+    // Get public URL
+    var publicUrl = SB_URL + '/storage/v1/object/public/' + BUCKET + '/' + fileName;
+
+    document.getElementById('uploadBar').style.width = '100%';
+    document.getElementById('uploadStatus').textContent = 'تم الرفع بنجاح ✓';
+
+    // Save URL
+    setLS('zn_hero_image', publicUrl);
+    document.getElementById('heroImgPreview').src = publicUrl;
+    document.getElementById('heroImgPreview').style.display = 'block';
+    document.getElementById('heroImgPlaceholder').style.display = 'none';
+    document.getElementById('heroImageUrl').style.display = 'block';
+    document.getElementById('heroImgUrl').value = publicUrl;
+
+    showToast('تم رفع الصورة بنجاح ✓');
+
+    setTimeout(function(){
+      document.getElementById('uploadProgress').style.display = 'none';
+    }, 2000);
+
+  } catch(err) {
+    document.getElementById('uploadBar').style.width = '0%';
+    document.getElementById('uploadStatus').textContent = '❌ خطأ: ' + err.message;
+    showToast('⚠ فشل الرفع: ' + err.message);
+    console.error('Upload error:', err);
+  }
+}
+
+// ── INIT ──
+// ── INIT ──
+loadProjects();
+loadHero();
+loadHeroImage();
+loadStats();
+loadFeatures();
+loadPricing();
+loadContact();
+</script>
+</body>
+</html>
