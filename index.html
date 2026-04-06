@@ -1059,25 +1059,25 @@ var SB_HEADERS = {'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY};
       }
     }
 
-    // ── PRICING ──
+    // ── PRICING (update values only, keep features list) ──
     var pkgs = settings['zn_packages'];
     if(pkgs && pkgs.length){
-      var pg = document.getElementById('pricingGrid');
-      if(pg){
-        pg.innerHTML = '';
-        pkgs.forEach(function(p, i){
-          var featured = i === 1 ? ' price-card-featured' : '';
-          var whatsMsg = encodeURIComponent('أهلاً، عايز باقة ' + p.badge);
-          pg.innerHTML += '<div class="price-card'+featured+'">' +
-            '<span class="price-badge">'+p.badge+'</span>' +
-            '<div class="price-old">السعر الأصلي: <span class="price-old-num">'+p.oldPrice+'</span></div>' +
-            '<div class="price-amount"><span class="price-currency">جنيه</span>'+p.price+'</div>' +
-            '<p class="price-note">'+p.note+'</p>' +
-            '<a class="price-cta" href="https://wa.me/201125472449?text='+whatsMsg+'" target="_blank">𓂀 اطلب دلوقتي</a>' +
-            '<div><span class="delivery-badge"><span class="del-icon">⚡</span>'+(p.delivery||'التسليم من 2 لـ 5 أيام')+'</span></div>' +
-            '</div>';
-        });
-      }
+      var cards = document.querySelectorAll('#pricingGrid .price-card');
+      pkgs.forEach(function(p, i){
+        if(i < cards.length){
+          var card = cards[i];
+          var badge = card.querySelector('.price-badge');
+          var oldNum = card.querySelector('.price-old-num');
+          var amount = card.querySelector('.price-amount');
+          var note = card.querySelector('.price-note');
+          var delivery = card.querySelector('.delivery-badge');
+          if(badge) badge.textContent = p.badge;
+          if(oldNum) oldNum.textContent = p.oldPrice;
+          if(amount) amount.innerHTML = '<span class="price-currency">جنيه</span>' + p.price;
+          if(note) note.textContent = p.note;
+          if(delivery) delivery.innerHTML = '<span class="del-icon">⚡</span>' + (p.delivery || 'التسليم من 2 لـ 5 أيام');
+        }
+      });
     }
 
     // ── CONTACT ──
