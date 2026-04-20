@@ -270,23 +270,56 @@ nav::before{
 .section-label::after{background:linear-gradient(90deg,var(--gold),transparent);}
 
 /* ═══ MOCKUP GRID ═══ */
+/* ══ SLIDER ══ */
 .mockup-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  gap:20px;width:100%;max-width:1100px;
+  display:block;width:100%;max-width:860px;
   animation:fadeUp 1s .6s ease both;
+  position:relative;
 }
-
+.slider-viewport{
+  overflow:hidden;width:100%;border-radius:12px;
+  border:1px solid var(--card-border);
+  box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 60px rgba(201,168,76,0.08);
+}
+.slider-track{
+  display:flex;transition:transform .55s cubic-bezier(.77,0,.175,1);
+  will-change:transform;
+}
 .mockup-card{
-  border-radius:4px;background:var(--card-bg);
-  border:1px solid var(--card-border);overflow:hidden;
-  transition:transform .3s,box-shadow .3s;
+  min-width:100%;border-radius:0;background:var(--card-bg);
+  border:none;overflow:hidden;
   backdrop-filter:blur(10px);text-decoration:none;display:block;
+  flex-shrink:0;
 }
-.mockup-card:hover{
-  transform:translateY(-7px) scale(1.015);
-  box-shadow:0 22px 60px rgba(0,0,0,0.5),0 0 40px rgba(201,168,76,0.15);
-  border-color:rgba(201,168,76,0.5);
+.slider-btn{
+  position:absolute;top:42%;transform:translateY(-50%);
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(13,10,0,0.80);border:1px solid rgba(201,168,76,0.4);
+  color:var(--gold);font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;z-index:10;backdrop-filter:blur(8px);
+  user-select:none;line-height:1;
 }
+.slider-btn:hover{background:rgba(201,168,76,0.18);border-color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,0.3);}
+.slider-btn-prev{right:-62px;}
+.slider-btn-next{left:-62px;}
+.slider-dots{
+  display:flex;justify-content:center;gap:8px;margin-top:18px;
+}
+.slider-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(201,168,76,0.22);cursor:pointer;
+  transition:all .35s;border:1px solid rgba(201,168,76,0.2);
+}
+.slider-dot.active{
+  background:var(--gold);width:24px;border-radius:4px;
+  box-shadow:0 0 8px rgba(201,168,76,0.5);
+}
+.slider-counter{
+  text-align:center;color:var(--muted);font-size:.78rem;
+  margin-top:10px;letter-spacing:.05em;
+}
+.slider-counter span{color:var(--gold);font-weight:700;}
 .browser-bar{
   display:flex;align-items:center;gap:8px;padding:10px 14px;
   background:rgba(201,168,76,0.05);
@@ -309,20 +342,71 @@ nav::before{
   filter:brightness(.92) saturate(1.1) sepia(.08);
   transition:transform .5s,filter .3s;display:block;
 }
-.mockup-card:hover .mockup-screen img{transform:scale(1.05);filter:brightness(1) saturate(1.2) sepia(0);}
 .card-footer{
-  padding:10px 14px;display:flex;align-items:center;
+  padding:14px 20px;display:flex;align-items:center;
   justify-content:space-between;
   border-top:1px solid rgba(201,168,76,0.08);
 }
-.card-site-name{font-size:.78rem;font-weight:700;color:var(--white);direction:rtl;}
+.card-site-name{font-size:.9rem;font-weight:700;color:var(--white);direction:rtl;}
 .card-tag{
-  font-size:.65rem;padding:3px 9px;
+  font-size:.68rem;padding:4px 12px;
   background:rgba(201,168,76,0.1);color:var(--gold);
   border:1px solid rgba(201,168,76,0.25);font-weight:600;
   clip-path:polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
 }
-.footer-band{
+@media(max-width:700px){
+  .slider-btn-prev{right:8px;top:auto;bottom:-62px;transform:none;}
+  .slider-btn-next{left:8px;top:auto;bottom:-62px;transform:none;}
+}
+/* ══ REVIEWS ══ */
+#sec-reviews{padding:60px 20px 40px;position:relative;z-index:2;}
+.reviews-slider-wrap{position:relative;max-width:900px;margin:0 auto;}
+.reviews-viewport{overflow:hidden;border-radius:0;}
+.reviews-track{display:flex;transition:transform .55s cubic-bezier(.77,0,.175,1);}
+.review-card{
+  min-width:100%;padding:36px 40px;
+  background:linear-gradient(135deg,rgba(201,168,76,0.06) 0%,rgba(13,10,0,0.4) 100%);
+  border:1px solid rgba(201,168,76,0.18);border-radius:16px;
+  display:flex;gap:28px;align-items:flex-start;
+  box-shadow:0 8px 40px rgba(0,0,0,0.4);
+  box-sizing:border-box;
+}
+.review-avatar{
+  width:72px;height:72px;border-radius:50%;object-fit:cover;
+  border:2px solid rgba(201,168,76,0.5);flex-shrink:0;
+  box-shadow:0 0 18px rgba(201,168,76,0.18);
+}
+.review-body{flex:1;min-width:0;}
+.review-stars{color:var(--gold);font-size:1rem;margin-bottom:8px;letter-spacing:2px;}
+.review-text{
+  color:var(--white);font-size:.95rem;line-height:1.8;
+  margin-bottom:14px;font-style:italic;opacity:.92;
+}
+.review-text::before{content:'"\202A';color:var(--gold);font-size:1.4rem;line-height:0;vertical-align:-.3em;}
+.review-text::after{content:'\202A"';color:var(--gold);font-size:1.4rem;line-height:0;vertical-align:-.3em;}
+.review-name{font-weight:700;color:var(--gold2);font-size:.88rem;}
+.review-job{color:var(--muted);font-size:.76rem;margin-top:2px;}
+.rev-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(13,10,0,0.8);border:1px solid rgba(201,168,76,0.35);
+  color:var(--gold);font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;z-index:5;backdrop-filter:blur(8px);
+}
+.rev-btn:hover{background:rgba(201,168,76,0.18);border-color:var(--gold);}
+.rev-prev{right:-56px;}.rev-next{left:-56px;}
+.rev-dots{display:flex;justify-content:center;gap:7px;margin-top:20px;flex-wrap:wrap;}
+.rev-dot{width:7px;height:7px;border-radius:50%;background:rgba(201,168,76,0.2);cursor:pointer;transition:all .3s;border:1px solid rgba(201,168,76,0.15);}
+.rev-dot.active{background:var(--gold);width:20px;border-radius:3px;}
+.rev-counter{text-align:center;color:var(--muted);font-size:.75rem;margin-top:8px;}
+.rev-counter span{color:var(--gold);font-weight:700;}
+@media(max-width:640px){
+  .review-card{flex-direction:column;align-items:center;text-align:center;padding:24px 18px;}
+  .rev-prev{right:4px;top:auto;bottom:-58px;transform:none;}
+  .rev-next{left:4px;top:auto;bottom:-58px;transform:none;}
+}
+
   margin-top:72px;width:100%;text-align:center;
   color:var(--muted);font-size:.8rem;
   border-top:1px solid rgba(201,168,76,0.12);
@@ -459,8 +543,7 @@ nav::before{
   .suits-grid{grid-template-columns:repeat(2,1fr) !important;}
   .payment-row{flex-direction:column;align-items:center;}
   .pay-card{width:100%;max-width:340px;}
-  .mockup-grid{grid-template-columns:1fr !important;}
-  .mockup-card:nth-child(n){grid-column:1/-1 !important;}
+  .mockup-grid{max-width:100%;}
   .stats{gap:24px;}
 }
 
@@ -709,7 +792,7 @@ nav::before{
     <div class="badge"><span class="badge-dot"></span>وكالة تصميم مصرية</div>
 
     <h1 class="hero-title" id="heroTitleEl">
-      نصنع مواقع تليق<br>بـ<span class="highlight">عظمة فرعون</span>
+      نصنع مواقع تليق<br>بـ<span class="highlight">عظمة الحضارة المصرية</span>
     </h1>
     <p class="hero-sub" id="heroSubEl">
       Zero-Nine — وكالة تصميم وتطوير مواقع احترافية. نجمع بين الحضارة المصرية الأصيلة والتكنولوجيا الحديثة لنصنع لك حضوراً رقمياً لا يُنسى.
@@ -726,65 +809,79 @@ nav::before{
     <div class="section-label">𓂀 أحدث أعمالنا 𓂀</div>
   </div>
 
-  <!-- MOCKUP GRID -->
-  <div style="position:relative;z-index:2;width:100%;max-width:1100px;margin:0 auto;padding:0 40px 80px;">
+  <!-- SLIDER -->
+  <div style="position:relative;z-index:2;width:100%;max-width:900px;margin:0 auto;padding:0 80px 80px;">
     <div id="sec-works" class="mockup-grid">
+      <!-- زر يمين (السابق) -->
+      <button class="slider-btn slider-btn-next" onclick="sliderMove(-1)" aria-label="السابق">&#8592;</button>
+      <!-- زر شمال (التالي) -->
+      <button class="slider-btn slider-btn-prev" onclick="sliderMove(1)" aria-label="التالي">&#8594;</button>
 
-      <a class="mockup-card" href="https://mobqalyub.vercel.app/#" target="_blank">
-        <div class="browser-bar">
-          <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-          <div class="browser-url"><span class="url-lock">🔒</span>mobqalyub.vercel.app</div>
-        </div>
-        <div class="mockup-screen">
-          <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80" alt="موب قليوب">
-        </div>
-        <div class="card-footer"><span class="card-site-name">موب قليوب</span><span class="card-tag">تطبيق ويب</span></div>
-      </a>
+      <div class="slider-viewport">
+        <div class="slider-track" id="sliderTrack">
 
-      <a class="mockup-card" href="https://www.egyptlatintours.com/" target="_blank">
-        <div class="browser-bar">
-          <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-          <div class="browser-url"><span class="url-lock">🔒</span>egyptlatintours.com</div>
-        </div>
-        <div class="mockup-screen">
-          <img src="https://images.unsplash.com/photo-1539768942893-daf53e448371?w=600&q=80" alt="Egypt Latin Tours">
-        </div>
-        <div class="card-footer"><span class="card-site-name">Egypt Latin Tours</span><span class="card-tag">سياحة وسفر</span></div>
-      </a>
+          <a class="mockup-card" href="https://mobqalyub.vercel.app/#" target="_blank">
+            <div class="browser-bar">
+              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+              <div class="browser-url"><span class="url-lock">🔒</span>mobqalyub.vercel.app</div>
+            </div>
+            <div class="mockup-screen">
+              <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=900&q=80" alt="موب قليوب">
+            </div>
+            <div class="card-footer"><span class="card-site-name">موب قليوب</span><span class="card-tag">تطبيق ويب</span></div>
+          </a>
 
-      <a class="mockup-card" href="https://travelcenteregypt.net/english/" target="_blank">
-        <div class="browser-bar">
-          <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-          <div class="browser-url"><span class="url-lock">🔒</span>travelcenteregypt.net</div>
-        </div>
-        <div class="mockup-screen">
-          <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&q=80" alt="Travel Center Egypt">
-        </div>
-        <div class="card-footer"><span class="card-site-name">Travel Center Egypt</span><span class="card-tag">مركز سياحة</span></div>
-      </a>
+          <a class="mockup-card" href="https://www.egyptlatintours.com/" target="_blank">
+            <div class="browser-bar">
+              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+              <div class="browser-url"><span class="url-lock">🔒</span>egyptlatintours.com</div>
+            </div>
+            <div class="mockup-screen">
+              <img src="https://images.unsplash.com/photo-1539768942893-daf53e448371?w=900&q=80" alt="Egypt Latin Tours">
+            </div>
+            <div class="card-footer"><span class="card-site-name">Egypt Latin Tours</span><span class="card-tag">سياحة وسفر</span></div>
+          </a>
 
-      <a class="mockup-card" href="https://www.essenceofegypttravel.net/?lang=en" target="_blank">
-        <div class="browser-bar">
-          <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-          <div class="browser-url"><span class="url-lock">🔒</span>essenceofegypttravel.net</div>
-        </div>
-        <div class="mockup-screen">
-          <img src="https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=600&q=80" alt="Essence of Egypt">
-        </div>
-        <div class="card-footer"><span class="card-site-name">Essence of Egypt</span><span class="card-tag">سياحة فاخرة</span></div>
-      </a>
+          <a class="mockup-card" href="https://travelcenteregypt.net/english/" target="_blank">
+            <div class="browser-bar">
+              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+              <div class="browser-url"><span class="url-lock">🔒</span>travelcenteregypt.net</div>
+            </div>
+            <div class="mockup-screen">
+              <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=900&q=80" alt="Travel Center Egypt">
+            </div>
+            <div class="card-footer"><span class="card-site-name">Travel Center Egypt</span><span class="card-tag">مركز سياحة</span></div>
+          </a>
 
-      <a class="mockup-card" href="https://www.sphinxegypttravel.com/" target="_blank">
-        <div class="browser-bar">
-          <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-          <div class="browser-url"><span class="url-lock">🔒</span>sphinxegypttravel.com</div>
-        </div>
-        <div class="mockup-screen">
-          <img src="https://images.unsplash.com/photo-1608178398319-48f814d0750c?w=600&q=80" alt="Sphinx Egypt Travel">
-        </div>
-        <div class="card-footer"><span class="card-site-name">Sphinx Egypt Travel</span><span class="card-tag">رحلات سياحية</span></div>
-      </a>
+          <a class="mockup-card" href="https://www.essenceofegypttravel.net/?lang=en" target="_blank">
+            <div class="browser-bar">
+              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+              <div class="browser-url"><span class="url-lock">🔒</span>essenceofegypttravel.net</div>
+            </div>
+            <div class="mockup-screen">
+              <img src="https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=900&q=80" alt="Essence of Egypt">
+            </div>
+            <div class="card-footer"><span class="card-site-name">Essence of Egypt</span><span class="card-tag">سياحة فاخرة</span></div>
+          </a>
 
+          <a class="mockup-card" href="https://www.sphinxegypttravel.com/" target="_blank">
+            <div class="browser-bar">
+              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+              <div class="browser-url"><span class="url-lock">🔒</span>sphinxegypttravel.com</div>
+            </div>
+            <div class="mockup-screen">
+              <img src="https://images.unsplash.com/photo-1608178398319-48f814d0750c?w=900&q=80" alt="Sphinx Egypt Travel">
+            </div>
+            <div class="card-footer"><span class="card-site-name">Sphinx Egypt Travel</span><span class="card-tag">رحلات سياحية</span></div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- dots -->
+      <div class="slider-dots" id="sliderDots"></div>
+      <!-- counter -->
+      <div class="slider-counter" id="sliderCounter"></div>
     </div>
   </div>
 
@@ -885,6 +982,215 @@ nav::before{
       <div class="suit-card"><span class="suit-icon">☕</span><span class="suit-name">مطاعم وكافيهات</span></div>
       <div class="suit-card"><span class="suit-icon">🏢</span><span class="suit-name">شركات وبيزنس</span></div>
       <div class="suit-card"><span class="suit-icon">𓆣</span><span class="suit-name">أي نشاط تجاري</span></div>
+    </div>
+  </div>
+
+  <div class="divider" style="position:relative;z-index:2;"></div>
+
+  <!-- REVIEWS -->
+  <div id="sec-reviews">
+    <p class="sec-title" style="position:relative;z-index:2;">آراء <em>عملائنا</em></p>
+    <p class="sec-subtitle" style="position:relative;z-index:2;">17 عميل وثقوا فينا وشهدوا على مستوانا</p>
+
+    <div class="reviews-slider-wrap" style="position:relative;z-index:2;">
+      <button class="rev-btn rev-next" onclick="revMove(-1)">&#8592;</button>
+      <button class="rev-btn rev-prev" onclick="revMove(1)">&#8594;</button>
+
+      <div class="reviews-viewport">
+        <div class="reviews-track" id="revTrack">
+
+          <!-- 1 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="أحمد">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">تعاملت مع Zero-Nine في موقع شركتي وكانت التجربة استثنائية. التسليم في الوقت المحدد تمامًا والتصميم فاق توقعاتي. فريق محترف بجد.</p>
+              <div class="review-name">أحمد محمد السيد</div>
+              <div class="review-job">صاحب شركة استيراد وتصدير</div>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="سارة">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">أنا معجبة جداً بالجودة والسرعة. طلبت موقع للمتجر الإلكتروني بتاعي وجاء في 4 أيام بس! التصميم أنيق ومتجاوب على كل الأجهزة.</p>
+              <div class="review-name">سارة خالد إبراهيم</div>
+              <div class="review-job">صاحبة متجر إلكتروني</div>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/55.jpg" alt="محمود">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">ثقة 100% في Zero-Nine. عملوا موقع الشركة بتاعتي بتفاصيل دقيقة جداً واهتموا بكل ملاحظة قلتها. ده مش مجرد شغل، ده فن.</p>
+              <div class="review-name">محمود عبدالرحمن</div>
+              <div class="review-job">مدير شركة مقاولات</div>
+            </div>
+          </div>
+
+          <!-- 4 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/women/68.jpg" alt="نورهان">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">أفضل قرار اتخذته هو إني اشتغلت مع Zero-Nine. الموقع طلع احترافي جداً وزاد زوار الصفحة بتاعتي بشكل ملحوظ من أول أسبوع.</p>
+              <div class="review-name">نورهان طارق فهمي</div>
+              <div class="review-job">مدربة لياقة بدنية</div>
+            </div>
+          </div>
+
+          <!-- 5 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/77.jpg" alt="كريم">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">الإنجاز السريع والدقيق هو اللي ميّز Zero-Nine. محتاجتش أشرح كتير، فهموا اللي أنا عايزه من أول لقاء وطلعوا بنتيجة مبهرة.</p>
+              <div class="review-name">كريم أشرف منصور</div>
+              <div class="review-job">مصور فوتوغرافي</div>
+            </div>
+          </div>
+
+          <!-- 6 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/women/12.jpg" alt="منى">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">كنت خايفة إن الموقع هياخد وقت طويل بس Zero-Nine سلّموا في 3 أيام فقط! وجودة الشغل عالية جداً. هرشحهم لكل حد محتاج موقع.</p>
+              <div class="review-name">منى حسام الدين</div>
+              <div class="review-job">صاحبة أكاديمية أونلاين</div>
+            </div>
+          </div>
+
+          <!-- 7 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/23.jpg" alt="عمر">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">شغل Zero-Nine يعبّر عن نفسه. الموقع اللي صمموهولي أصبح واجهة احترافية لشركتي وبيجيب عملاء جدد يوميًا. شكراً من القلب.</p>
+              <div class="review-name">عمر يوسف الغزالي</div>
+              <div class="review-job">صاحب مكتب استشارات</div>
+            </div>
+          </div>
+
+          <!-- 8 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/women/36.jpg" alt="ريم">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">الدقة في التنفيذ دي حاجة مش هتلاقيها في كل مكان. Zero-Nine فهمت brand بتاعتي وعكستها بشكل مثالي في التصميم. عملاء جدد كتير بعد الموقع!</p>
+              <div class="review-name">ريم إسلام عوض</div>
+              <div class="review-job">مصممة أزياء</div>
+            </div>
+          </div>
+
+          <!-- 9 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/41.jpg" alt="هشام">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">جربت ناس كتير قبل Zero-Nine بس الفرق واضح. دقة في التفاصيل وسرعة في التسليم وتواصل ممتاز طول الوقت. ده اللي كنت محتاجه بالظبط.</p>
+              <div class="review-name">هشام وليد البدري</div>
+              <div class="review-job">مدير مبيعات</div>
+            </div>
+          </div>
+
+          <!-- 10 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/women/58.jpg" alt="دينا">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">المشروع اتسلم قبل الموعد المحدد وبجودة أعلى من اللي توقعته. Zero-Nine بتتعامل معاك كشريك مش كمجرد عميل. ثقة تامة ومستمرة.</p>
+              <div class="review-name">دينا فاروق صادق</div>
+              <div class="review-job">طبيبة أسنان — عيادة خاصة</div>
+            </div>
+          </div>
+
+          <!-- 11 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/62.jpg" alt="مصطفى">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">عملت مشروع تخرج مع Zero-Nine وكان رائع. الأستاذة في الكلية سألتني مين صمم الموقع وبهرت بيه. شكراً على الاحترافية والسرعة.</p>
+              <div class="review-name">مصطفى جمال حلمي</div>
+              <div class="review-job">طالب دراسات عليا</div>
+            </div>
+          </div>
+
+          <!-- 12 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/women/27.jpg" alt="ياسمين">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">من أحسن القرارات إني اشتغلت مع Zero-Nine. الثقة في التعامل والإنجاز الدقيق خلوني أوصيلهم لكل أصحابي. فريق محترف ومتميز.</p>
+              <div class="review-name">ياسمين محمد عثمان</div>
+              <div class="review-job">مديرة تسويق رقمي</div>
+            </div>
+          </div>
+
+          <!-- 13 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/88.jpg" alt="طارق">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">الجودة اللي قدّمها Zero-Nine في الموقع بتاعتي فاقت كل توقعاتي. التصميم فاخر والسرعة في التحميل ممتازة. أنصح بيهم بشدة.</p>
+              <div class="review-name">طارق إبراهيم نصر</div>
+              <div class="review-job">صاحب مطعم</div>
+            </div>
+          </div>
+
+          <!-- 14 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/women/81.jpg" alt="إيمان">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">Zero-Nine مش بس بيعملوا مواقع، بيبنوا هوية رقمية كاملة. حسيت إن موقعي بقى أنيق ومعبّر عن شخصية العلامة التجارية بتاعتي تماماً.</p>
+              <div class="review-name">إيمان سامح القاضي</div>
+              <div class="review-job">مستشارة أعمال</div>
+            </div>
+          </div>
+
+          <!-- 15 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/15.jpg" alt="أسامة">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">تجربتي مع Zero-Nine كانت سلسة من أول لحظة. تواصل سريع ومتابعة مستمرة وتسليم في الوقت. ده اللي بيخلي العميل يرجع تاني.</p>
+              <div class="review-name">أسامة عادل زكي</div>
+              <div class="review-job">مهندس ومطور برمجيات</div>
+            </div>
+          </div>
+
+          <!-- 16 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/women/90.jpg" alt="شيماء">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">أنا من أكبر المعجبين بشغل Zero-Nine. كل مرة بشوف موقعي بحس بالفخر. التصميم احترافي والأداء سريع والتجربة كلها كانت رائعة.</p>
+              <div class="review-name">شيماء حمدي رضوان</div>
+              <div class="review-job">صاحبة مركز تجميل</div>
+            </div>
+          </div>
+
+          <!-- 17 -->
+          <div class="review-card">
+            <img class="review-avatar" src="https://randomuser.me/api/portraits/men/97.jpg" alt="بلال">
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">Zero-Nine بالنسبالي مش مجرد شركة تصميم، هم شركاء نجاح حقيقيين. مشروعي الأول على الإنترنت كان معاهم وهيكون كل المشاريع الجاية كمان.</p>
+              <div class="review-name">بلال أحمد شريف</div>
+              <div class="review-job">رائد أعمال ناشئ</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="rev-dots" id="revDots"></div>
+      <div class="rev-counter" id="revCounter"></div>
     </div>
   </div>
 
@@ -999,9 +1305,12 @@ document.querySelectorAll('.stat-num').forEach(el=>{
 
 <script>
 // ══════ SUPABASE CONFIG ══════
-var SB_URL = 'https://aeizymcxnhypvmsdpjum.supabase.co';
-var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlaXp5bWN4bmh5cHZtc2RwanVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MzIwNjMsImV4cCI6MjA5MDAwODA2M30.J-3YT_hh_KCksLgWKYDtBFbgE456482fzZawDU6nvds';
+var SB_URL = 'https://albvpipmafkrxaxahdvm.supabase.co';
+var SB_KEY = 'sb_publishable_t31fiOL7wTmawFBX-haoYQ_xYfLrFK9';
 var SB_HEADERS = {'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY};
+
+// init slider for static cards immediately
+document.addEventListener('DOMContentLoaded', function(){ initSlider(); });
 
 // ══════ LOAD ALL SETTINGS FROM SUPABASE ══════
 (async function(){
@@ -1095,12 +1404,12 @@ var SB_HEADERS = {'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY};
 
   // ── PROJECTS ──
   try {
-    var grid = document.getElementById('sec-works');
-    if(grid){
+    var track = document.getElementById('sliderTrack');
+    if(track){
       var res2 = await fetch(SB_URL + '/rest/v1/projects?select=*&order=sort_order.asc', {headers: SB_HEADERS});
       var projects = await res2.json();
       if(projects && projects.length){
-        grid.innerHTML = '';
+        track.innerHTML = '';
         projects.forEach(function(p){
           var a = document.createElement('a');
           a.className = 'mockup-card';
@@ -1112,14 +1421,133 @@ var SB_HEADERS = {'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY};
             '<div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>' +
             '<div class="browser-url"><span class="url-lock">🔒</span>' + domain + '</div>' +
             '</div>' +
-            '<div class="mockup-screen"><img src="' + (p.image || '') + '" alt="' + (p.name || '') + '" onerror="this.src=\'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80\'"></div>' +
+            '<div class="mockup-screen"><img src="' + (p.image || '') + '" alt="' + (p.name || '') + '" onerror="this.src=\'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=900&q=80\'"></div>' +
             '<div class="card-footer"><span class="card-site-name">' + (p.name || '') + '</span><span class="card-tag">' + (p.tag || '') + '</span></div>';
-          grid.appendChild(a);
+          track.appendChild(a);
         });
       }
     }
   } catch(e){ console.error('Load projects error:', e); }
+
+  // init slider after projects loaded
+  initSlider();
 })();
+
+// ══ SLIDER LOGIC ══
+var sliderIndex = 0;
+function initSlider(){
+  var track = document.getElementById('sliderTrack');
+  var dotsEl = document.getElementById('sliderDots');
+  var counterEl = document.getElementById('sliderCounter');
+  if(!track) return;
+  var cards = track.querySelectorAll('.mockup-card');
+  var total = cards.length;
+  if(total === 0) return;
+
+  // build dots
+  dotsEl.innerHTML = '';
+  for(var i=0;i<total;i++){
+    var d = document.createElement('div');
+    d.className = 'slider-dot' + (i===0?' active':'');
+    d.dataset.i = i;
+    d.onclick = (function(idx){return function(){goSlide(idx);};})(i);
+    dotsEl.appendChild(d);
+  }
+
+  updateSlider(total);
+
+  // swipe support
+  var startX = 0;
+  var viewport = document.querySelector('.slider-viewport');
+  if(viewport){
+    viewport.addEventListener('touchstart',function(e){startX=e.touches[0].clientX;},{passive:true});
+    viewport.addEventListener('touchend',function(e){
+      var diff = startX - e.changedTouches[0].clientX;
+      if(Math.abs(diff)>40) sliderMove(diff>0?1:-1);
+    },{passive:true});
+  }
+}
+function updateSlider(total){
+  var track = document.getElementById('sliderTrack');
+  var dotsEl = document.getElementById('sliderDots');
+  var counterEl = document.getElementById('sliderCounter');
+  if(!track) return;
+  var cards = track.querySelectorAll('.mockup-card');
+  total = total || cards.length;
+  track.style.transform = 'translateX(' + (sliderIndex * 100) + '%)';
+  dotsEl.querySelectorAll('.slider-dot').forEach(function(d,i){
+    d.classList.toggle('active', i===sliderIndex);
+  });
+  counterEl.innerHTML = '<span>'+(sliderIndex+1)+'</span> / '+total;
+}
+function sliderMove(dir){
+  var track = document.getElementById('sliderTrack');
+  if(!track) return;
+  var total = track.querySelectorAll('.mockup-card').length;
+  sliderIndex = (sliderIndex - dir + total) % total;
+  updateSlider(total);
+}
+function goSlide(idx){
+  sliderIndex = idx;
+  var track = document.getElementById('sliderTrack');
+  if(!track) return;
+  updateSlider(track.querySelectorAll('.mockup-card').length);
+}
+
+// ══ REVIEWS SLIDER ══
+var revIndex = 0;
+(function initReviews(){
+  var track = document.getElementById('revTrack');
+  var dotsEl = document.getElementById('revDots');
+  var counterEl = document.getElementById('revCounter');
+  if(!track) return;
+  var cards = track.querySelectorAll('.review-card');
+  var total = cards.length;
+  dotsEl.innerHTML = '';
+  for(var i=0;i<total;i++){
+    var d = document.createElement('div');
+    d.className = 'rev-dot'+(i===0?' active':'');
+    d.onclick=(function(idx){return function(){goRev(idx);};})(i);
+    dotsEl.appendChild(d);
+  }
+  updateRev(total);
+  // auto-play every 5s
+  setInterval(function(){ revIndex=(revIndex+1)%total; updateRev(total); }, 5000);
+  // swipe
+  var vp = document.querySelector('.reviews-viewport');
+  if(vp){
+    var sx=0;
+    vp.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
+    vp.addEventListener('touchend',function(e){
+      var diff=sx-e.changedTouches[0].clientX;
+      if(Math.abs(diff)>40) revMove(diff>0?1:-1);
+    },{passive:true});
+  }
+})();
+function updateRev(total){
+  var track=document.getElementById('revTrack');
+  var dotsEl=document.getElementById('revDots');
+  var counterEl=document.getElementById('revCounter');
+  if(!track)return;
+  var cards=track.querySelectorAll('.review-card');
+  total=total||cards.length;
+  track.style.transform='translateX('+(revIndex*100)+'%)';
+  dotsEl.querySelectorAll('.rev-dot').forEach(function(d,i){d.classList.toggle('active',i===revIndex);});
+  counterEl.innerHTML='<span>'+(revIndex+1)+'</span> / '+total;
+}
+function revMove(dir){
+  var track=document.getElementById('revTrack');
+  if(!track)return;
+  var total=track.querySelectorAll('.review-card').length;
+  revIndex=(revIndex-dir+total)%total;
+  updateRev(total);
+}
+function goRev(idx){
+  revIndex=idx;
+  var track=document.getElementById('revTrack');
+  if(!track)return;
+  updateRev(track.querySelectorAll('.review-card').length);
+}
 
 function runCounters(){
   document.querySelectorAll('.stat-num').forEach(function(el){
