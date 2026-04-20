@@ -819,62 +819,6 @@ nav::before{
 
       <div class="slider-viewport">
         <div class="slider-track" id="sliderTrack">
-
-          <a class="mockup-card" href="https://mobqalyub.vercel.app/#" target="_blank">
-            <div class="browser-bar">
-              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-              <div class="browser-url"><span class="url-lock">🔒</span>mobqalyub.vercel.app</div>
-            </div>
-            <div class="mockup-screen">
-              <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=900&q=80" alt="موب قليوب">
-            </div>
-            <div class="card-footer"><span class="card-site-name">موب قليوب</span><span class="card-tag">تطبيق ويب</span></div>
-          </a>
-
-          <a class="mockup-card" href="https://www.egyptlatintours.com/" target="_blank">
-            <div class="browser-bar">
-              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-              <div class="browser-url"><span class="url-lock">🔒</span>egyptlatintours.com</div>
-            </div>
-            <div class="mockup-screen">
-              <img src="https://images.unsplash.com/photo-1539768942893-daf53e448371?w=900&q=80" alt="Egypt Latin Tours">
-            </div>
-            <div class="card-footer"><span class="card-site-name">Egypt Latin Tours</span><span class="card-tag">سياحة وسفر</span></div>
-          </a>
-
-          <a class="mockup-card" href="https://travelcenteregypt.net/english/" target="_blank">
-            <div class="browser-bar">
-              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-              <div class="browser-url"><span class="url-lock">🔒</span>travelcenteregypt.net</div>
-            </div>
-            <div class="mockup-screen">
-              <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=900&q=80" alt="Travel Center Egypt">
-            </div>
-            <div class="card-footer"><span class="card-site-name">Travel Center Egypt</span><span class="card-tag">مركز سياحة</span></div>
-          </a>
-
-          <a class="mockup-card" href="https://www.essenceofegypttravel.net/?lang=en" target="_blank">
-            <div class="browser-bar">
-              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-              <div class="browser-url"><span class="url-lock">🔒</span>essenceofegypttravel.net</div>
-            </div>
-            <div class="mockup-screen">
-              <img src="https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=900&q=80" alt="Essence of Egypt">
-            </div>
-            <div class="card-footer"><span class="card-site-name">Essence of Egypt</span><span class="card-tag">سياحة فاخرة</span></div>
-          </a>
-
-          <a class="mockup-card" href="https://www.sphinxegypttravel.com/" target="_blank">
-            <div class="browser-bar">
-              <div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-              <div class="browser-url"><span class="url-lock">🔒</span>sphinxegypttravel.com</div>
-            </div>
-            <div class="mockup-screen">
-              <img src="https://images.unsplash.com/photo-1608178398319-48f814d0750c?w=900&q=80" alt="Sphinx Egypt Travel">
-            </div>
-            <div class="card-footer"><span class="card-site-name">Sphinx Egypt Travel</span><span class="card-tag">رحلات سياحية</span></div>
-          </a>
-
         </div>
       </div>
 
@@ -1417,16 +1361,22 @@ document.addEventListener('DOMContentLoaded', function(){ initSlider(); });
           a.target = '_blank';
           var domain = '';
           try { domain = new URL(p.url).hostname; } catch(e){ domain = p.url; }
-          a.innerHTML = '<div class="browser-bar">' +
-            '<div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>' +
-            '<div class="browser-url"><span class="url-lock">🔒</span>' + domain + '</div>' +
+          a.innerHTML =
+            '<div class="browser-bar">' +
+              '<div class="browser-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>' +
+              '<div class="browser-url"><span class="url-lock">🔒</span>' + domain + '</div>' +
             '</div>' +
-            '<div class="mockup-screen"><img src="' + (p.image || '') + '" alt="' + (p.name || '') + '" onerror="this.src=\'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=900&q=80\'"></div>' +
+            '<div class="mockup-screen"><img src="' + (p.image || '') + '" alt="' + (p.name || '') + '" loading="lazy"></div>' +
             '<div class="card-footer"><span class="card-site-name">' + (p.name || '') + '</span><span class="card-tag">' + (p.tag || '') + '</span></div>';
           track.appendChild(a);
         });
+        // استنى frame واحد عشان الـ DOM يتبني صح
         sliderIndex = 0;
-        initSlider();
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){
+            initSlider();
+          });
+        });
       }
     }
   } catch(e){ console.error('Load projects error:', e); }
@@ -1434,56 +1384,56 @@ document.addEventListener('DOMContentLoaded', function(){ initSlider(); });
 
 // ══ SLIDER LOGIC ══
 var sliderIndex = 0;
+
 function initSlider(){
+  var viewport = document.querySelector('.slider-viewport');
   var track = document.getElementById('sliderTrack');
   var dotsEl = document.getElementById('sliderDots');
-  if(!track) return;
+  if(!track || !viewport) return;
   var cards = track.querySelectorAll('.mockup-card');
   var total = cards.length;
   if(total === 0) return;
 
-  // set each card width = viewport width
-  var vpWidth = track.parentElement.offsetWidth;
-  cards.forEach(function(c){ c.style.width = vpWidth + 'px'; });
+  var vpW = viewport.offsetWidth;
 
-  // build dots
+  // كل كارت عرضه = عرض الـ viewport بالظبط
+  cards.forEach(function(c){
+    c.style.width = vpW + 'px';
+    c.style.flexShrink = '0';
+  });
+
+  // الـ track عرضه = عدد الكروت × عرض الكارت
+  track.style.width = (vpW * total) + 'px';
+  track.style.display = 'flex';
+
+  // dots
   dotsEl.innerHTML = '';
-  for(var i=0;i<total;i++){
+  for(var i = 0; i < total; i++){
     var d = document.createElement('div');
-    d.className = 'slider-dot' + (i===0?' active':'');
-    d.onclick = (function(idx){return function(){goSlide(idx);};})(i);
+    d.className = 'slider-dot' + (i === 0 ? ' active' : '');
+    d.onclick = (function(idx){ return function(){ goSlide(idx); }; })(i);
     dotsEl.appendChild(d);
   }
 
   updateSlider(total);
-
-  // swipe
-  var startX = 0;
-  var viewport = document.querySelector('.slider-viewport');
-  if(viewport){
-    viewport.addEventListener('touchstart',function(e){startX=e.touches[0].clientX;},{passive:true});
-    viewport.addEventListener('touchend',function(e){
-      var diff = startX - e.changedTouches[0].clientX;
-      if(Math.abs(diff)>40) sliderMove(diff>0?1:-1);
-    },{passive:true});
-  }
 }
+
 function updateSlider(total){
+  var viewport = document.querySelector('.slider-viewport');
   var track = document.getElementById('sliderTrack');
   var dotsEl = document.getElementById('sliderDots');
   var counterEl = document.getElementById('sliderCounter');
-  if(!track) return;
+  if(!track || !viewport) return;
   var cards = track.querySelectorAll('.mockup-card');
   total = total || cards.length;
-  var vpWidth = track.parentElement.offsetWidth;
-  // ensure card widths are correct
-  cards.forEach(function(c){ c.style.width = vpWidth + 'px'; });
-  track.style.transform = 'translateX(' + (-sliderIndex * vpWidth) + 'px)';
+  var vpW = viewport.offsetWidth;
+  track.style.transform = 'translateX(' + (-sliderIndex * vpW) + 'px)';
   dotsEl.querySelectorAll('.slider-dot').forEach(function(d,i){
-    d.classList.toggle('active', i===sliderIndex);
+    d.classList.toggle('active', i === sliderIndex);
   });
-  counterEl.innerHTML = '<span>'+(sliderIndex+1)+'</span> / '+total;
+  counterEl.innerHTML = '<span>' + (sliderIndex + 1) + '</span> / ' + total;
 }
+
 function sliderMove(dir){
   var track = document.getElementById('sliderTrack');
   if(!track) return;
@@ -1491,6 +1441,7 @@ function sliderMove(dir){
   sliderIndex = (sliderIndex - dir + total) % total;
   updateSlider(total);
 }
+
 function goSlide(idx){
   sliderIndex = idx;
   var track = document.getElementById('sliderTrack');
