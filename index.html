@@ -818,7 +818,7 @@ nav::before{
       <!-- زر شمال (التالي) -->
       <button class="slider-btn slider-btn-prev" onclick="sliderMove(-1)" aria-label="التالي">&#8594;</button>
 
-      <div class="slider-viewport">
+      <div class="slider-viewport" dir="ltr">
         <div class="slider-track" id="sliderTrack">
         </div>
       </div>
@@ -941,7 +941,7 @@ nav::before{
       <button class="rev-btn rev-next" onclick="revMove(-1)">&#8592;</button>
       <button class="rev-btn rev-prev" onclick="revMove(1)">&#8594;</button>
 
-      <div class="reviews-viewport">
+      <div class="reviews-viewport" dir="ltr">
         <div class="reviews-track" id="revTrack">
 
           <!-- 1 -->
@@ -1395,17 +1395,18 @@ function initSlider(){
   var total = cards.length;
   if(total === 0) return;
 
-  var vpW = viewport.offsetWidth;
+  var vpW = viewport.getBoundingClientRect().width || viewport.offsetWidth;
+  if(!vpW) return;
 
-  // كل كارت عرضه = عرض الـ viewport بالظبط
+  track.style.direction = 'ltr';
+  track.style.display = 'flex';
+  track.style.width = (vpW * total) + 'px';
+
   cards.forEach(function(c){
     c.style.width = vpW + 'px';
     c.style.flexShrink = '0';
+    c.style.direction = 'rtl';
   });
-
-  // الـ track عرضه = عدد الكروت × عرض الكارت
-  track.style.width = (vpW * total) + 'px';
-  track.style.display = 'flex';
 
   // dots
   dotsEl.innerHTML = '';
@@ -1427,7 +1428,7 @@ function updateSlider(total){
   if(!track || !viewport) return;
   var cards = track.querySelectorAll('.mockup-card');
   total = total || cards.length;
-  var vpW = viewport.offsetWidth;
+  var vpW = viewport.getBoundingClientRect().width || viewport.offsetWidth;
   track.style.transform = 'translateX(' + (-sliderIndex * vpW) + 'px)';
   dotsEl.querySelectorAll('.slider-dot').forEach(function(d,i){
     d.classList.toggle('active', i === sliderIndex);
@@ -1457,7 +1458,9 @@ var revIndex = 0;
   var dotsEl = document.getElementById('revDots');
   var counterEl = document.getElementById('revCounter');
   if(!track) return;
+  track.style.direction = 'ltr';
   var cards = track.querySelectorAll('.review-card');
+  cards.forEach(function(c){ c.style.direction = 'rtl'; });
   var total = cards.length;
   dotsEl.innerHTML = '';
   for(var i=0;i<total;i++){
