@@ -1474,7 +1474,8 @@ function updateSlider(total){
   if(!track) return;
   var cards = track.querySelectorAll('.mockup-card');
   total = total || cards.length;
-  track.style.transform = 'translateX(' + (sliderIndex * 100) + '%)';
+  var vpWidth = track.parentElement.offsetWidth;
+  track.style.transform = 'translateX(' + (-sliderIndex * vpWidth) + 'px)';
   dotsEl.querySelectorAll('.slider-dot').forEach(function(d,i){
     d.classList.toggle('active', i===sliderIndex);
   });
@@ -1531,7 +1532,8 @@ function updateRev(total){
   if(!track)return;
   var cards=track.querySelectorAll('.review-card');
   total=total||cards.length;
-  track.style.transform='translateX('+(revIndex*100)+'%)';
+  var rvpWidth = track.parentElement.offsetWidth;
+  track.style.transform='translateX('+(-revIndex * rvpWidth)+'px)';
   dotsEl.querySelectorAll('.rev-dot').forEach(function(d,i){d.classList.toggle('active',i===revIndex);});
   counterEl.innerHTML='<span>'+(revIndex+1)+'</span> / '+total;
 }
@@ -1548,6 +1550,14 @@ function goRev(idx){
   if(!track)return;
   updateRev(track.querySelectorAll('.review-card').length);
 }
+
+// recalc on resize
+window.addEventListener('resize', function(){
+  var t1 = document.getElementById('sliderTrack');
+  if(t1) updateSlider(t1.querySelectorAll('.mockup-card').length);
+  var t2 = document.getElementById('revTrack');
+  if(t2) updateRev(t2.querySelectorAll('.review-card').length);
+});
 
 function runCounters(){
   document.querySelectorAll('.stat-num').forEach(function(el){
