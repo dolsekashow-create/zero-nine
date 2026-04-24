@@ -718,7 +718,7 @@ nav::before{
     </p>
     <div class="cta-row">
       <button class="btn-primary" id="ctaPrimaryEl" onclick="goToSection('sec-price')">🚀 اطلب موقعك دلوقتي</button>
-      <button class="btn-secondary" id="ctaSecondaryEl" onclick="goToSection('sec-works')">شوف أعمالنا</button>
+      <button class="btn-secondary" id="ctaSecondaryEl" onclick="smartRoute(this)">شوف أعمالنا</button>
     </div>
     <div class="stats" id="statsBar">
       <div class="stat"><div class="stat-num" data-target="50" data-suffix="+">0+</div><div class="stat-label">مشروع منجز</div></div>
@@ -1124,6 +1124,22 @@ nav::before{
 function goToSection(id){
   var el=document.getElementById(id);
   if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function smartRoute(btn){
+  var txt = btn.textContent.trim();
+  var map = {
+    'شوف أعمالنا':'sec-works',
+    'أعمالنا':'sec-works',
+    'تواصل معنا':'sec-contact',
+    'تواصل':'sec-contact',
+    'الأسعار':'sec-price',
+    'أسعار':'sec-price',
+    'خدماتنا':'sec-features',
+    'خدمات':'sec-features'
+  };
+  var target = map[txt] || 'sec-works';
+  goToSection(target);
 }
 
 
