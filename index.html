@@ -1420,10 +1420,10 @@ footer{
   .lang-switch{padding:3px}
   .lang-btn{padding:4px 9px;font-size:10px}
 
-  /* ===== Mobile Hamburger Icon ===== */
-  .menu-icon{display:flex}
+  /* إظهار الـ hamburger */
+  .menu-icon{display:flex;z-index:300}
 
-  /* ===== Mobile Nav Drawer ===== */
+  /* Mobile Nav Drawer */
   .nav-menu{
     display:flex !important;
     flex-direction:column;
@@ -1453,28 +1453,20 @@ footer{
   .nav-menu.mobile-open{right:0}
   [dir="rtl"] .nav-menu.mobile-open{left:0;right:auto}
 
-  .nav-menu li{
-    border-bottom:1px solid var(--line);
-    width:100%;
-  }
+  .nav-menu li{border-bottom:1px solid var(--line);width:100%}
   .nav-menu li:last-child{border-bottom:none}
   .nav-menu a{
     display:block;
     padding:16px 0;
     font-size:16px !important;
-    letter-spacing:.05em !important;
+    letter-spacing:.03em !important;
     font-family:var(--arabic) !important;
     color:var(--text) !important;
     text-transform:none !important;
   }
   .nav-menu a:hover,.nav-menu a.active{color:var(--gold-1) !important}
-  .nav-menu a::after{display:none}
-
-  /* ===== Show mobile-only items ===== */
+  .nav-menu a::after{display:none !important}
   .mobile-only{display:list-item !important}
-
-  /* زر الـ X بيبقى فوق الـ drawer */
-  .menu-icon{z-index:300}
   
   /* الـ Hero على الموبايل - الصورة كاملة باينة */
   .hero{
@@ -2341,10 +2333,19 @@ async function loadContactContent(){
 
 async function loadHeroImage(){
   const url = await getSetting('zn_hero_image', null);
+  const bg = document.querySelector('.site-bg');
+  const heroImg = document.querySelector('.hero-image');
+
   if(url){
-    // إذا كانت صورة هيرو مرفوعة من الادمن، نستخدمها كخلفية بدلاً من background.jpg
-    const bg = document.querySelector('.site-bg');
+    // استخدم الصورة من الادمن في الـ site-bg والـ hero-image
     if(bg) bg.style.backgroundImage = `url('${url}')`;
+    if(heroImg) heroImg.style.backgroundImage = `url('${url}')`;
+  } else {
+    // لو مفيش صورة مرفوعة، خلي الـ hero-image شفاف عشان الـ site-bg يبان من وراه
+    if(heroImg){
+      heroImg.style.backgroundImage = 'none';
+      heroImg.style.background = 'transparent';
+    }
   }
 }
 
@@ -2429,27 +2430,23 @@ function triggerAutoTranslate(lang){
   const navMenu  = document.getElementById('navMenu');
   const overlay  = document.getElementById('menuOverlay');
   if(!menuIcon || !navMenu) return;
-
   function openMenu(){
     navMenu.classList.add('mobile-open');
     menuIcon.classList.add('open');
-    overlay.classList.add('show');
+    if(overlay) overlay.classList.add('show');
     document.body.style.overflow = 'hidden';
   }
   function closeMenu(){
     navMenu.classList.remove('mobile-open');
     menuIcon.classList.remove('open');
-    overlay.classList.remove('show');
+    if(overlay) overlay.classList.remove('show');
     document.body.style.overflow = '';
   }
-
   menuIcon.addEventListener('click', () => {
     navMenu.classList.contains('mobile-open') ? closeMenu() : openMenu();
   });
-  overlay.addEventListener('click', closeMenu);
-  navMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', closeMenu);
-  });
+  if(overlay) overlay.addEventListener('click', closeMenu);
+  navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 })();
 
 // ============== STICKY NAVBAR ==============
