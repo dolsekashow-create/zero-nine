@@ -304,7 +304,7 @@ body{top:0 !important}
   justify-content:center;
   padding:0;
   overflow:hidden;
-  background:transparent;
+  background:#000;
 }
 
 /* صورة الهيرو الكاملة - كل العناصر فيها (اللوجو + الاسم + الفرعون + النقوش) */
@@ -313,7 +313,7 @@ body{top:0 !important}
   inset:0;
   width:100%;
   height:100%;
-  background-image:url('hero.jpg'), url('background.jpg');
+  background-image:url('hero.jpg');
   background-size:cover;
   background-position:center center;
   background-repeat:no-repeat;
@@ -325,7 +325,7 @@ body{top:0 !important}
   content:'';
   position:absolute;
   inset:0;
-  background:linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,0) 15%, rgba(0,0,0,0) 75%, rgba(0,0,0,.3) 100%);
+  background:linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 15%, rgba(0,0,0,0) 75%, rgba(0,0,0,.7) 100%);
   pointer-events:none;
 }
 
@@ -1420,14 +1420,25 @@ footer{
   .lang-switch{padding:3px}
   .lang-btn{padding:4px 9px;font-size:10px}
   
-  /* الـ Hero على الموبايل - الفيديو في النص فوق + النص تحته */
+  /* الـ Hero على الموبايل - الصورة كاملة باينة */
   .hero{
-    padding:90px 20px 50px;
+    padding:0;
+    min-height:0;
+    /* غيّر الرقم حسب نسبة صورتك: 16:9→56vw | 16:7→44vw | 2:1→50vw */
+    height:max(44vw, 220px);
     flex-direction:column;
-    text-align:center;
     align-items:center;
-    min-height:100vh;
+    justify-content:center;
     gap:0;
+  }
+  /* الصورة كاملة بدون قطع */
+  .hero-image{
+    background-size:contain !important;
+    background-position:center center !important;
+  }
+  /* شيل الـ overlay الغامق على الموبايل */
+  .hero-image::after{
+    background:none !important;
   }
   .hero-content{
     width:100%;
@@ -1510,7 +1521,7 @@ footer{
 }
 
 @media(max-width:380px){
-  .hero{padding:80px 16px 40px}
+  .hero{padding:0;height:max(44vw,180px)}
   .brand-mark{width:min(320px, 95vw)}
   .brand-name{font-size:36px !important}
   .navbar{padding:12px 12px}
