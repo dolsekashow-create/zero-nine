@@ -235,86 +235,164 @@ body{top:0 !important}
 .lets-talk:hover::before{transform:translateY(0)}
 
 .menu-icon{
-  display:flex;
+  display:none; /* مخفي على الديسكتوب */
   flex-direction:column;
   gap:5px;
   cursor:pointer;
-  padding:8px;
+  padding:10px;
+  background:transparent;
+  border:1px solid var(--line-strong);
+  border-radius:8px;
+  width:42px;
+  height:42px;
+  align-items:center;
+  justify-content:center;
+  transition:all .3s;
+}
+.menu-icon:hover{
+  border-color:var(--gold-1);
+  background:rgba(212,175,55,.05);
 }
 .menu-icon span{
-  width:26px;
+  width:22px;
   height:2px;
   background:var(--gold-1);
   display:block;
-  transition:all .3s;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  transform-origin:center;
+  border-radius:2px;
 }
+
+/* لما القائمة مفتوحة - تحول الـ icon لـ X */
+.menu-icon.open span:nth-child(1){
+  transform:translateY(7px) rotate(45deg);
+}
+.menu-icon.open span:nth-child(2){
+  opacity:0;
+  transform:scaleX(0);
+}
+.menu-icon.open span:nth-child(3){
+  transform:translateY(-7px) rotate(-45deg);
+}
+
+/* Overlay اللي بيغطي الصفحة لما القائمة مفتوحة */
+.menu-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(10,9,7,.6);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  z-index:99;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s;
+}
+.menu-overlay.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.mobile-only{display:none}
 
 /* ===== HERO ===== */
 .hero{
   position:relative;
+  width:100%;
   min-height:100vh;
   display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  padding:120px 60px 60px;
+  align-items:flex-end;
+  justify-content:center;
+  padding:0;
   overflow:hidden;
-  gap:40px;
+  background:#000;
 }
 
-.hero-bg{
+/* صورة الهيرو الكاملة - كل العناصر فيها (اللوجو + الاسم + الفرعون + النقوش) */
+.hero-image{
   position:absolute;
   inset:0;
-  z-index:0;
+  width:100%;
+  height:100%;
+  background-image:url('hero.jpg');
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  z-index:1;
 }
-.hero-bg::before{
+
+/* overlay خفيف عشان الناف بار يبان */
+.hero-image::after{
   content:'';
   position:absolute;
   inset:0;
-  background:
-    radial-gradient(ellipse at 30% 40%, rgba(212,175,55,.10) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(10,9,7,.4) 0%, rgba(10,9,7,.2) 100%);
+  background:linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 15%, rgba(0,0,0,0) 75%, rgba(0,0,0,.7) 100%);
+  pointer-events:none;
 }
 
+.hero-bg{display:none}
 .pharaoh-side{display:none}
 .pharaoh-img{display:none}
+.brand-mark{display:none}
+.brand-name{display:none}
+.brand-tagline{display:none}
+.scarab{display:none}
+.hero-tagline-2{display:none}
 
-/* الـ Hero Content - يبقى في النص-شمال */
 .hero-content{
   position:relative;
   z-index:5;
+  width:100%;
   display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  width:100%;
-  max-width:900px;
-  margin-inline-start:0;
-}
-[dir="rtl"] .hero-content{
-  align-items:flex-start;
+  justify-content:center;
+  padding:0 20px 40px;
 }
 
-/* اللوجو فيديو - كبير جداً زي الصورة المرجع */
-.brand-mark{
+/* زر شفاف فوق "Discover More" اللي في الصورة */
+.hero-discover-area{
+  position:absolute;
+  z-index:10;
+  /* الزرار في الصورة موقعه تقريباً عند 30-50% أفقياً، 70-80% عمودياً */
+  left:18%;
+  bottom:20%;
+  width:18%;
+  height:7%;
+  cursor:pointer;
+  border-radius:50px;
+  transition:background .3s;
+  text-decoration:none;
+}
+.hero-discover-area:hover{
+  background:rgba(212,175,55,.08);
+  box-shadow:0 0 30px rgba(212,175,55,.2);
+}
+[dir="rtl"] .hero-discover-area{
+  left:18%;
+}
+
+/* services-strip wrapper - بره الـ hero */
+.services-strip-wrap{
   position:relative;
-  width:min(540px, 60vw);
-  height:auto;
-  aspect-ratio:1/1;
-  margin-bottom:10px;
-  margin-inline-start:-30px;
-  animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) both;
+  z-index:5;
+  background:rgba(10,9,7,.85);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
 }
 
-.brand-mark video,
-.brand-mark svg{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  filter:drop-shadow(0 0 60px rgba(212,175,55,.5));
-  display:block;
+/* الزر القديم Discover - مخفي */
+.hero .discover-btn{
+  display:none;
 }
 
-.brand-mark video{
-  background:transparent;
+/* الـ services strip تحت الـ hero */
+.services-strip{
+  position:relative;
+  z-index:5;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  padding:30px 60px;
+  animation:floatIn 1.2s cubic-bezier(.16,1,.3,1) .7s both;
 }
 
 @keyframes floatIn{
@@ -1462,13 +1540,15 @@ footer{
 <nav class="navbar" id="navbar">
   <a href="#" class="nav-logo">09</a>
   
-  <ul class="nav-menu">
+  <ul class="nav-menu" id="navMenu">
     <li><a href="#home" class="active" data-ar="الرئيسية" data-en="Home">الرئيسية</a></li>
     <li><a href="#about" data-ar="من نحن" data-en="About Us">من نحن</a></li>
     <li><a href="#services" data-ar="خدماتنا" data-en="Services">خدماتنا</a></li>
     <li><a href="#portfolio" data-ar="أعمالنا" data-en="Portfolio">أعمالنا</a></li>
     <li><a href="#pricing" data-ar="الأسعار" data-en="Pricing">الأسعار</a></li>
     <li><a href="#contact" data-ar="تواصل" data-en="Contact">تواصل</a></li>
+    <!-- mobile-only items -->
+    <li class="mobile-only"><a href="#contact" data-ar="تكلم معنا" data-en="Let's Talk">تكلم معنا</a></li>
   </ul>
   
   <div class="nav-right">
@@ -1477,83 +1557,26 @@ footer{
       <button class="lang-btn" data-lang="en" onclick="switchLang('en')">EN</button>
     </div>
     <a href="#contact" class="lets-talk" data-ar="تكلم معنا" data-en="Let's Talk">تكلم معنا</a>
-    <div class="menu-icon">
+    <button class="menu-icon" id="menuIcon" aria-label="Toggle menu" type="button">
       <span></span><span></span><span></span>
-    </div>
+    </button>
   </div>
 </nav>
 
+<!-- Mobile menu overlay -->
+<div class="menu-overlay" id="menuOverlay"></div>
+
 <!-- ===== HERO ===== -->
 <section class="hero" id="home">
-  <div class="hero-bg">
-    <div class="pharaoh-side">
-      <div class="pharaoh-img"></div>
-    </div>
-  </div>
+  <!-- صورة الهيرو الكاملة - فيها كل العناصر (لوجو + اسم + فرعون + نقوش + الزرار) -->
+  <div class="hero-image" role="img" aria-label="Zero-Nine - For Digital Solutions"></div>
   
-  <div class="hero-content">
-    <!-- Logo Video: animated logo with shine effect -->
-    <div class="brand-mark">
-      <video 
-        src="logo.mp4" 
-        autoplay 
-        loop 
-        muted 
-        playsinline 
-        preload="auto"
-        aria-label="Zero-Nine animated logo">
-        <!-- fallback SVG في حالة المتصفح ما يدعمش الفيديو -->
-        <svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#f4d47c"/>
-              <stop offset="50%" style="stop-color:#d4af37"/>
-              <stop offset="100%" style="stop-color:#8a6a1f"/>
-            </linearGradient>
-          </defs>
-          <g transform="translate(140 130)">
-            <path d="M 0 -65 C 35 -65, 60 -40, 60 -10 C 60 20, 40 40, 10 40 C -15 40, -35 25, -35 0 C -35 -25, -15 -40, 5 -40 C 25 -40, 40 -25, 40 -5 C 40 10, 30 20, 15 20 C 5 20, -5 12, -5 0 M 60 -10 C 60 30, 50 70, 30 95 L 5 95"
-              stroke="url(#goldGrad)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </g>
-        </svg>
-      </video>
-    </div>
-    
-    <h1 class="brand-name display-font" data-ar="زيرو-ناين" data-en="ZERO-NINE">ZERO-NINE</h1>
-    
-    <div class="brand-tagline">
-      <span data-ar="للحلول الرقمية" data-en="For Digital Solutions">للحلول الرقمية</span>
-    </div>
-    
-    <!-- Scarab decoration -->
-    <svg class="scarab" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="scarabGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#f4d47c"/>
-          <stop offset="100%" style="stop-color:#b8902c"/>
-        </linearGradient>
-      </defs>
-      <!-- Sun disc -->
-      <circle cx="40" cy="8" r="4" fill="url(#scarabGrad)"/>
-      <!-- Wings -->
-      <path d="M 40 18 Q 20 16 8 25 Q 18 26 25 28 M 40 22 Q 18 22 5 32 Q 18 32 28 33" stroke="url(#scarabGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <path d="M 40 18 Q 60 16 72 25 Q 62 26 55 28 M 40 22 Q 62 22 75 32 Q 62 32 52 33" stroke="url(#scarabGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <!-- Body -->
-      <ellipse cx="40" cy="28" rx="6" ry="10" fill="url(#scarabGrad)"/>
-      <line x1="40" y1="20" x2="40" y2="38" stroke="#0a0907" stroke-width="0.8"/>
-    </svg>
-    
-    <p class="hero-tagline-2" data-ar="ابتكار رقمي. أثر خالد." data-en="Digital Innovation. Timeless Impact.">ابتكار رقمي. أثر خالد.</p>
-    
-    <a href="#about" class="discover-btn">
-      <span data-ar="اكتشف المزيد" data-en="Discover More">اكتشف المزيد</span>
-      <svg class="arrow" width="18" height="12" viewBox="0 0 18 12" fill="none">
-        <path d="M1 6h16m0 0L12 1m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-  </div>
-  
-  <!-- Services Strip at bottom -->
+  <!-- زرار شفاف فوق "Discover More" اللي في الصورة عشان يبقى clickable -->
+  <a href="#about" class="hero-discover-area" aria-label="Discover More"></a>
+</section>
+
+<!-- Services Strip - قسم منفصل تحت الهيرو -->
+<div class="services-strip-wrap">
   <div class="services-strip">
     <div class="service-item">
       <div class="service-icon">
@@ -1603,7 +1626,7 @@ footer{
       <span class="service-label" data-ar="التسويق الرقمي" data-en="Digital Marketing">التسويق الرقمي</span>
     </div>
   </div>
-</section>
+</div>
 
 <!-- ===== ABOUT ===== -->
 <section id="about">
