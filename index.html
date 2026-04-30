@@ -1414,11 +1414,67 @@ footer{
   }
   
   .navbar{padding:14px 16px;gap:8px}
-  .nav-menu, .lets-talk{display:none}
+  .lets-talk{display:none}
   .navbar.scrolled{padding:12px 16px}
   .nav-logo{font-size:22px;padding:5px 10px}
   .lang-switch{padding:3px}
   .lang-btn{padding:4px 9px;font-size:10px}
+
+  /* ===== Mobile Hamburger Icon ===== */
+  .menu-icon{display:flex}
+
+  /* ===== Mobile Nav Drawer ===== */
+  .nav-menu{
+    display:flex !important;
+    flex-direction:column;
+    position:fixed;
+    top:0;
+    right:-100%;
+    width:min(300px, 80vw);
+    height:100vh;
+    background:rgba(10,9,7,.97);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-left:1px solid var(--line-strong);
+    z-index:200;
+    padding:80px 30px 40px;
+    gap:0;
+    list-style:none;
+    transition:right .35s cubic-bezier(.4,0,.2,1);
+    overflow-y:auto;
+  }
+  [dir="rtl"] .nav-menu{
+    right:auto;
+    left:-100%;
+    border-left:none;
+    border-right:1px solid var(--line-strong);
+    transition:left .35s cubic-bezier(.4,0,.2,1);
+  }
+  .nav-menu.mobile-open{right:0}
+  [dir="rtl"] .nav-menu.mobile-open{left:0;right:auto}
+
+  .nav-menu li{
+    border-bottom:1px solid var(--line);
+    width:100%;
+  }
+  .nav-menu li:last-child{border-bottom:none}
+  .nav-menu a{
+    display:block;
+    padding:16px 0;
+    font-size:16px !important;
+    letter-spacing:.05em !important;
+    font-family:var(--arabic) !important;
+    color:var(--text) !important;
+    text-transform:none !important;
+  }
+  .nav-menu a:hover,.nav-menu a.active{color:var(--gold-1) !important}
+  .nav-menu a::after{display:none}
+
+  /* ===== Show mobile-only items ===== */
+  .mobile-only{display:list-item !important}
+
+  /* زر الـ X بيبقى فوق الـ drawer */
+  .menu-icon{z-index:300}
   
   /* الـ Hero على الموبايل - الصورة كاملة باينة */
   .hero{
@@ -2365,6 +2421,35 @@ function triggerAutoTranslate(lang){
     const saved = localStorage.getItem('zn_lang');
     if(saved && saved !== 'ar') switchLang(saved);
   }catch(e){}
+})();
+
+// ============== MOBILE MENU TOGGLE ==============
+(function(){
+  const menuIcon = document.getElementById('menuIcon');
+  const navMenu  = document.getElementById('navMenu');
+  const overlay  = document.getElementById('menuOverlay');
+  if(!menuIcon || !navMenu) return;
+
+  function openMenu(){
+    navMenu.classList.add('mobile-open');
+    menuIcon.classList.add('open');
+    overlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu(){
+    navMenu.classList.remove('mobile-open');
+    menuIcon.classList.remove('open');
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  menuIcon.addEventListener('click', () => {
+    navMenu.classList.contains('mobile-open') ? closeMenu() : openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+  navMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMenu);
+  });
 })();
 
 // ============== STICKY NAVBAR ==============
