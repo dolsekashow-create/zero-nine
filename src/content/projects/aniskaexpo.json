@@ -2,6 +2,6 @@
   "name": "شركة Aniska",
   "tag": "تصدير واستيراد",
   "url": "https://www.aniskaexpo.com/",
-  "image": "../../assets/projects/09-aniskaexpo.jpg",
+  "image": "/src/assets/projects/09-aniskaexpo.jpg",
   "order": 9
 }

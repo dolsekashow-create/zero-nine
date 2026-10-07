@@ -2,6 +2,6 @@
   "name": "شركة البركة",
   "tag": "شركة معدات ثقيلة",
   "url": "https://a2lpr2a2ka.vercel.app/",
-  "image": "../../assets/projects/15-a2lpr2a2ka.jpg",
+  "image": "/src/assets/projects/15-a2lpr2a2ka.jpg",
   "order": 15
 }

@@ -2,6 +2,6 @@
   "name": "Silvy Cosmetics",
   "tag": "شركة مستحضرات تجميل",
   "url": "https://www.silvycosmetics.com/",
-  "image": "../../assets/projects/05-silvycosmetics.jpg",
+  "image": "/src/assets/projects/05-silvycosmetics.jpg",
   "order": 5
 }

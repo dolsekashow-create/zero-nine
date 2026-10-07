@@ -5,7 +5,7 @@ backend:
   branch: main
 
 media_folder: src/assets/projects
-public_folder: ../../assets/projects
+public_folder: /src/assets/projects
 site_url: https://www.zero--nine.online
 locale: ar
 
@@ -23,7 +23,7 @@ collections:
     summary: "{{order}} · {{name}} — {{tag}}"
     sortable_fields: [order, name]
     media_folder: /src/assets/projects
-    public_folder: ../../assets/projects
+    public_folder: /src/assets/projects
     fields:
       - { name: name, label: اسم المشروع, widget: string }
       - { name: tag, label: "التصنيف (مثلاً: شركة أثاث)", widget: string, required: false }

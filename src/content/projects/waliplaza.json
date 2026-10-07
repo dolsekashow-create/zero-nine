@@ -2,6 +2,6 @@
   "name": "waliplaza",
   "tag": "شركة اثاث",
   "url": "https://www.waliplaza.com/",
-  "image": "../../assets/projects/04-waliplaza.jpg",
+  "image": "/src/assets/projects/04-waliplaza.jpg",
   "order": 4
 }

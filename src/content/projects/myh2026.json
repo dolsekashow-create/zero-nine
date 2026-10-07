@@ -2,6 +2,6 @@
   "name": "الموقع الرسمي للقائد مصطفي ياسين",
   "tag": "صفحة رسمية",
   "url": "https://www.myh2026.online/",
-  "image": "../../assets/projects/10-myh2026.jpg",
+  "image": "/src/assets/projects/10-myh2026.jpg",
   "order": 10
 }
