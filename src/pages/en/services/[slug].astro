@@ -1,0 +1,14 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ServicePage from '../../../components/ServicePage.astro';
+import { servicePages } from '../../../data/servicePages';
+import { pageLd } from '../../../data/seo';
+
+export function getStaticPaths() {
+  return servicePages.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props;
+---
+<Layout lang="en" path={`services/${s.slug}/`} title={s.en.title} description={s.en.desc} jsonLd={pageLd(s, 'en')}>
+  <ServicePage s={s} lang="en" />
+</Layout>

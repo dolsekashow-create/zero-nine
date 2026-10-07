@@ -2,6 +2,9 @@
 import { Image, Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Icon from './Icon.astro';
+import ProjectCard from './ProjectCard.astro';
+import { servicePages } from '../data/servicePages';
+import { home as homeOf } from '../data/helpers';
 import site from '../data/site.json';
 import { ui, services, process, calculator, pick, type Lang } from '../data/i18n';
 import logoMark from '../assets/brand/logo-mark.png';
@@ -18,7 +21,6 @@ const phones = [
   { wa: site.contact.whatsapp2, display: site.contact.phoneDisplay2 },
 ].filter((p) => p.wa);
 const hello = lang === 'ar' ? 'السلام عليكم، عايز أستفسر عن موقع.' : "Hello, I'd like to ask about a website.";
-const hostOf = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
 
 const projects = (await getCollection('projects'))
   .filter((p) => !p.data.hidden)
@@ -56,31 +58,6 @@ const sparks = Array.from({ length: 28 }, () => ({
 const initialTotal = calculator.groups.reduce((s, g) => s + g.options[0].price, 0);
 const nf = new Intl.NumberFormat('en-US');
 ---
-<header class="site-header">
-  <div class="wrap header-inner">
-    <a class="brand" href={lang === 'ar' ? '/' : '/en/'} aria-label="Zero-Nine">
-      <Image src={logoMark} alt="" width={80} widths={[40, 80]} sizes="40px" loading="eager" />
-      <span class="brand-name">ZERO-NINE</span>
-    </a>
-    <nav class="nav" id="nav" aria-label={t.menu}>
-      <ul>
-        <li><a href="#about">{t.nav.about}</a></li>
-        <li><a href="#services">{t.nav.services}</a></li>
-        <li><a href="#work">{t.nav.work}</a></li>
-        <li><a href="#pricing">{t.nav.pricing}</a></li>
-        <li><a href="#faq">{t.nav.faq}</a></li>
-        <li><a href="#contact">{t.nav.contact}</a></li>
-      </ul>
-    </nav>
-    <div class="header-actions">
-      <a class="lang" href={other} hreflang={lang === 'ar' ? 'en' : 'ar'} aria-label={`${t.langSwitch} — ${t.langSwitchLabel}`}>{t.langSwitch}</a>
-      <a class="btn btn-gold" href={wa(lang === 'ar' ? 'السلام عليكم، عايز أستفسر عن موقع.' : "Hello, I'd like to ask about a website.")} target="_blank" rel="noopener">
-        <Icon name="whatsapp" />{t.talk}
-      </a>
-      <button class="menu-btn" aria-controls="nav" aria-expanded="false" aria-label={t.menu}><Icon name="menu" /></button>
-    </div>
-  </div>
-</header>
 
 <main id="main">
   <!-- ============ HERO ============ -->
@@ -171,13 +148,14 @@ const nf = new Intl.NumberFormat('en-US');
         <p>{t.servicesSub}</p>
       </div>
       <div class="services-grid">
-        {services.map((s, i) => (
-          <article class="card reveal" style={`--d:${i % 3}`}>
+        {servicePages.map((sp, i) => (
+          <a class="card reveal" href={`${homeOf(lang)}services/${sp.slug}/`} style={`--d:${i % 3}`}>
             <span class="num">0{i + 1}</span>
-            <Icon name={s.icon} class="draw" />
-            <h3>{s[lang][0]}</h3>
-            <p>{s[lang][1]}</p>
-          </article>
+            <Icon name={sp.icon} class="draw" />
+            <h3>{sp[lang].name}</h3>
+            <p>{services[i][lang][1]}</p>
+            <span class="card-more">{t.more}<Icon name="arrow" class="icon-dir" /></span>
+          </a>
         ))}
       </div>
     </div>
@@ -193,19 +171,7 @@ const nf = new Intl.NumberFormat('en-US');
       </div>
       <div class="work-grid">
         {projects.map((p, i) => (
-          <a class="project reveal" style={`--d:${i % 4}`} href={p.data.url} target="_blank" rel="noopener" aria-label={`${p.data.name}: ${t.visit}`}>
-            <div class="project-media">
-              <span class="project-domain">{hostOf(p.data.url)}</span>
-              <Picture src={p.data.image} alt={`${p.data.name} — ${p.data.tag}`} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[400, 640, 900]} sizes="(max-width: 1100px) 50vw, 300px" loading="lazy" decoding="async" />
-            </div>
-            <div class="project-body">
-              <div>
-                <h3>{p.data.name}</h3>
-                {p.data.tag && <span class="project-tag">{p.data.tag}</span>}
-              </div>
-              <span class="project-go"><Icon name="external" /></span>
-            </div>
-          </a>
+          <ProjectCard p={p} lang={lang} i={i} />
         ))}
       </div>
     </div>
@@ -403,48 +369,4 @@ const nf = new Intl.NumberFormat('en-US');
   </section>
 </main>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid">
-      <div>
-        <a class="brand" href={lang === 'ar' ? '/' : '/en/'}><Image src={logoMark} alt="" width={80} widths={[40, 80]} sizes="40px" /><span class="brand-name">ZERO-NINE</span></a>
-        <p>{t.footerAbout}</p>
-      </div>
-      <div>
-        <h3>Zero-Nine</h3>
-        <ul>
-          <li><a href="#about">{t.nav.about}</a></li>
-          <li><a href="#work">{t.nav.work}</a></li>
-          <li><a href="#pricing">{t.nav.pricing}</a></li>
-          <li><a href="#faq">{t.nav.faq}</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>{t.nav.services}</h3>
-        <ul>{services.slice(0, 4).map((s) => <li><a href="#services">{s[lang][0]}</a></li>)}</ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© {new Date().getFullYear()} Zero-Nine. {t.rights}.</span>
-      <span>{t.madeIn} 𓂀</span>
-    </div>
-  </div>
-</footer>
 
-{phones.length > 1 ? (
-  <details class="wa-float">
-    <summary aria-label={t.chooseNumber}><Icon name="whatsapp" /></summary>
-    <div class="wa-menu">
-      <strong>{t.chooseNumber}</strong>
-      {phones.map((p, i) => (
-        <a href={`https://wa.me/${p.wa}?text=${encodeURIComponent(hello)}`} target="_blank" rel="noopener">
-          <Icon name="whatsapp" /><span><small>{t.line(i + 1)}</small><span class="ltr">{p.display}</span></span>
-        </a>
-      ))}
-    </div>
-  </details>
-) : (
-  <a class="wa-float" href={`https://wa.me/${phones[0].wa}?text=${encodeURIComponent(hello)}`} target="_blank" rel="noopener" aria-label={t.whatsapp}>
-    <Icon name="whatsapp" />
-  </a>
-)}

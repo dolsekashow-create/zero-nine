@@ -1,0 +1,96 @@
+---
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+import ProjectCard from './ProjectCard.astro';
+import { ui, type Lang } from '../data/i18n';
+import { servicePages, type ServicePage } from '../data/servicePages';
+import { home, waLink } from '../data/helpers';
+
+interface Props { s: ServicePage; lang: Lang }
+const { s, lang } = Astro.props;
+const t = ui[lang];
+const c = s[lang];
+const h = home(lang);
+const nf = new Intl.NumberFormat('en-US');
+
+// Projects tagged with this service in /admin (untagged projects count as web-development)
+const work = (await getCollection('projects'))
+  .filter((p) => !p.data.hidden && (p.data.service || 'web-development') === s.slug)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4);
+const others = servicePages.filter((x) => x.slug !== s.slug);
+---
+<main id="main">
+  <section class="page-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="breadcrumb"><a href={h}>{t.home}</a><span aria-hidden="true">/</span><span>{c.name}</span></nav>
+      <div class="page-hero-grid">
+        <div>
+          <p class="eyebrow">{t.servicesEyebrow}</p>
+          <h1>{c.h1}</h1>
+          <p class="page-lead">{c.intro}</p>
+          <div class="hero-ctas">
+            <a class="btn btn-gold" href={waLink(t.askAbout(c.name))} target="_blank" rel="noopener"><Icon name="whatsapp" />{t.getQuote}</a>
+            <a class="btn btn-ghost" href={`${h}#pricing`}>{t.nav.pricing}</a>
+          </div>
+        </div>
+        <div class="page-hero-art" aria-hidden="true">
+          <Icon name={s.icon} class="draw is-in" size={160} />
+          {s.from && <div class="from-badge"><small>{t.startsFrom}</small><strong class="gold-text">{nf.format(s.from)}</strong><small>{t.currency}</small></div>}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 24px">
+    <div class="wrap">
+      <div class="section-head reveal"><h2>{t.whatYouGet}</h2></div>
+      <div class="services-grid">
+        {c.features.map(([title, desc], i) => (
+          <div class="card reveal" style={`--d:${i % 3}`}>
+            <Icon name="check" class="draw" />
+            <h3>{title}</h3>
+            <p>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {work.length > 0 && (
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head reveal"><h2>{t.selectedWork}</h2></div>
+        <div class="work-grid">{work.map((p, i) => <ProjectCard p={p} lang={lang} i={i} />)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal"><h2>{t.faqTitle}</h2></div>
+      <div class="faq">
+        {c.faq.map(([q, a], i) => (
+          <details class="reveal" name="faq" open={i === 0}>
+            <summary>{q}</summary>
+            <div class="answer"><p>{a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <h2>{t.contactTitle}</h2>
+        <p>{t.contactSub}</p>
+        <a class="btn btn-gold" href={waLink(t.askAbout(c.name))} target="_blank" rel="noopener"><Icon name="whatsapp" />{t.getQuote}</a>
+      </div>
+      <h2 class="more-title">{t.otherServices}</h2>
+      <ul class="chip-list">
+        {others.map((o) => <li><a href={`${h}services/${o.slug}/`}><Icon name={o.icon} />{o[lang].name}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</main>

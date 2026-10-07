@@ -31,6 +31,20 @@ collections:
       - { name: image, label: صورة المشروع, widget: image, hint: "يفضّل لقطة شاشة عرضها 1400px تقريباً. الموقع بيصغّرها تلقائياً." }
       - { name: order, label: "الترتيب (1 = الأول)", widget: number, value_type: int, default: 99 }
       - { name: hidden, label: إخفاء من الموقع, widget: boolean, default: false, required: false }
+      - name: service
+        label: نوع الخدمة (بيظهر المشروع في صفحتها)
+        widget: select
+        required: false
+        default: web-development
+        options:
+          - { label: تصميم وتطوير المواقع, value: web-development }
+          - { label: متجر إلكتروني, value: online-store }
+          - { label: تطبيق موبايل, value: app-development }
+          - { label: هوية بصرية, value: brand-identity }
+          - { label: تصميم UI/UX, value: ui-ux-design }
+          - { label: تسويق رقمي, value: digital-marketing }
+      - { name: summary_ar, label: "وصف المشروع (عربي): العميل كان محتاج إيه وعملناله إيه", widget: text, required: false }
+      - { name: summary_en, label: "Project summary (English)", widget: text, required: false }
 
   - name: settings
     label: إعدادات الموقع

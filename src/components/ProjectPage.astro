@@ -1,0 +1,55 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import ProjectCard from './ProjectCard.astro';
+import { ui, type Lang } from '../data/i18n';
+import { servicePages } from '../data/servicePages';
+import { home, hostOf, waLink } from '../data/helpers';
+import { projectSummary } from '../data/seo';
+
+interface Props { p: CollectionEntry<'projects'>; lang: Lang }
+const { p, lang } = Astro.props;
+const t = ui[lang];
+const h = home(lang);
+const svc = servicePages.find((s) => s.slug === (p.data.service || 'web-development'));
+const all = (await getCollection('projects')).filter((x) => !x.data.hidden).sort((a, b) => a.data.order - b.data.order);
+const idx = all.findIndex((x) => x.id === p.id);
+const more = [1, 2, 3, 4].map((k) => all[(idx + k) % all.length]).filter((x) => x.id !== p.id);
+---
+<main id="main">
+  <section class="page-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="breadcrumb"><a href={h}>{t.home}</a><span aria-hidden="true">/</span><a href={`${h}#work`}>{t.allWork}</a><span aria-hidden="true">/</span><span>{p.data.name}</span></nav>
+      <div class="project-detail">
+        <div class="project-detail-copy">
+          {p.data.tag && <p class="eyebrow">{p.data.tag}</p>}
+          <h1>{p.data.name}</h1>
+          <p class="page-lead">{projectSummary(p, lang)}</p>
+          <dl class="facts">
+            <div><dt>{t.client}</dt><dd>{p.data.name}</dd></div>
+            {p.data.tag && <div><dt>{t.category}</dt><dd>{p.data.tag}</dd></div>}
+            {svc && <div><dt>{t.servicesEyebrow}</dt><dd><a href={`${h}services/${svc.slug}/`}>{svc[lang].name}</a></dd></div>}
+            <div><dt>{t.website}</dt><dd><a class="ltr" href={p.data.url} target="_blank" rel="noopener">{hostOf(p.data.url)}</a></dd></div>
+          </dl>
+          <div class="hero-ctas">
+            <a class="btn btn-gold" href={p.data.url} target="_blank" rel="noopener"><Icon name="external" />{t.visit}</a>
+            <a class="btn btn-ghost" href={waLink(t.similarMsg(p.data.name))} target="_blank" rel="noopener"><Icon name="whatsapp" />{t.wantSimilar}</a>
+          </div>
+        </div>
+        <a class="project-shot" href={p.data.url} target="_blank" rel="noopener">
+          <span class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="ltr">{hostOf(p.data.url)}</span></span>
+          <Picture src={p.data.image} alt={`${p.data.name} — ${p.data.tag}`} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[480, 760, 1100]} sizes="(max-width: 860px) 100vw, 640px" loading="eager" fetchpriority="high" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal"><h2>{t.moreWork}</h2></div>
+      <div class="work-grid">{more.map((x, i) => <ProjectCard p={x} lang={lang} i={i} />)}</div>
+      <div class="center-cta"><a class="btn btn-ghost" href={`${h}#work`}>{t.allWork}</a></div>
+    </div>
+  </section>
+</main>

@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Home from '../components/Home.astro';
+import { homeFaq } from '../data/faqLd';
 ---
-<Layout lang="ar"><Home lang="ar" /></Layout>
+<Layout lang="ar" jsonLd={[homeFaq('ar')]}><Home lang="ar" /></Layout>

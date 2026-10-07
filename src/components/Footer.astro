@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import { ui, type Lang } from '../data/i18n';
+import { home } from '../data/helpers';
+import { servicePages } from '../data/servicePages';
+import logoMark from '../assets/brand/logo-mark.png';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const h = home(lang);
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href={h}><Image src={logoMark} alt="" width={80} widths={[40, 80]} sizes="40px" /><span class="brand-name">ZERO-NINE</span></a>
+        <p>{t.footerAbout}</p>
+      </div>
+      <div>
+        <h3>Zero-Nine</h3>
+        <ul>
+          <li><a href={`${h}#about`}>{t.nav.about}</a></li>
+          <li><a href={`${h}#work`}>{t.nav.work}</a></li>
+          <li><a href={`${h}#pricing`}>{t.nav.pricing}</a></li>
+          <li><a href={`${h}#faq`}>{t.nav.faq}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>{t.nav.services}</h3>
+        <ul>{servicePages.map((s) => <li><a href={`${h}services/${s.slug}/`}>{s[lang].name}</a></li>)}</ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {new Date().getFullYear()} Zero-Nine. {t.rights}.</span>
+      <span>{t.madeIn} 𓂀</span>
+    </div>
+  </div>
+</footer>

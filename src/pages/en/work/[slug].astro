@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import ProjectPage from '../../../components/ProjectPage.astro';
+import { projectMeta } from '../../../data/seo';
+import { projectSlug } from '../../../data/helpers';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('projects')).filter((p) => !p.data.hidden);
+  return all.map((p) => ({ params: { slug: projectSlug(p.id) }, props: { p } }));
+}
+const { p } = Astro.props;
+const meta = projectMeta(p, 'en');
+---
+<Layout lang="en" path={`work/${projectSlug(p.id)}/`} title={meta.title} description={meta.desc} jsonLd={meta.jsonLd}>
+  <ProjectPage p={p} lang="en" />
+</Layout>

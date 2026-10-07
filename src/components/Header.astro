@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { ui, type Lang } from '../data/i18n';
+import { home, waLink, helloText } from '../data/helpers';
+import logoMark from '../assets/brand/logo-mark.png';
+
+interface Props { lang: Lang; altHref: string }
+const { lang, altHref } = Astro.props;
+const t = ui[lang];
+const h = home(lang);
+const hello = helloText(lang);
+---
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href={h} aria-label="Zero-Nine">
+      <Image src={logoMark} alt="" width={80} widths={[40, 80]} sizes="40px" loading="eager" />
+      <span class="brand-name">ZERO-NINE</span>
+    </a>
+    <nav class="nav" id="nav" aria-label={t.menu}>
+      <ul>
+        <li><a href={`${h}#about`}>{t.nav.about}</a></li>
+        <li><a href={`${h}#services`}>{t.nav.services}</a></li>
+        <li><a href={`${h}#work`}>{t.nav.work}</a></li>
+        <li><a href={`${h}#pricing`}>{t.nav.pricing}</a></li>
+        <li><a href={`${h}#faq`}>{t.nav.faq}</a></li>
+        <li><a href={`${h}#contact`}>{t.nav.contact}</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a class="lang" href={altHref} hreflang={lang === 'ar' ? 'en' : 'ar'} aria-label={`${t.langSwitch} — ${t.langSwitchLabel}`}>{t.langSwitch}</a>
+      <a class="btn btn-gold" href={waLink(hello)} target="_blank" rel="noopener">
+        <Icon name="whatsapp" />{t.talk}
+      </a>
+      <button class="menu-btn" aria-controls="nav" aria-expanded="false" aria-label={t.menu}><Icon name="menu" /></button>
+    </div>
+  </div>
+</header>

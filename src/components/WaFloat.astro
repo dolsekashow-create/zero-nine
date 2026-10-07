@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import { ui, type Lang } from '../data/i18n';
+import { phones, helloText } from '../data/helpers';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const hello = helloText(lang);
+---
+{phones.length > 1 ? (
+  <details class="wa-float">
+    <summary aria-label={t.chooseNumber}><Icon name="whatsapp" /></summary>
+    <div class="wa-menu">
+      <strong>{t.chooseNumber}</strong>
+      {phones.map((p, i) => (
+        <a href={`https://wa.me/${p.wa}?text=${encodeURIComponent(hello)}`} target="_blank" rel="noopener">
+          <Icon name="whatsapp" /><span><small>{t.line(i + 1)}</small><span class="ltr">{p.display}</span></span>
+        </a>
+      ))}
+    </div>
+  </details>
+) : (
+  <a class="wa-float" href={`https://wa.me/${phones[0].wa}?text=${encodeURIComponent(hello)}`} target="_blank" rel="noopener" aria-label={t.whatsapp}>
+    <Icon name="whatsapp" />
+  </a>
+)}

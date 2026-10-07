@@ -5,24 +5,42 @@ import cairoAr from '../assets/fonts/cairo-arabic-var.woff2?url';
 import cairoLa from '../assets/fonts/cairo-latin-var.woff2?url';
 import messiriAr from '../assets/fonts/el-messiri-arabic-700.woff2?url';
 import messiriLa from '../assets/fonts/el-messiri-latin-700.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WaFloat from '../components/WaFloat.astro';
 import site from '../data/site.json';
 import { ui, type Lang } from '../data/i18n';
+import { BASE } from '../data/helpers';
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+interface Props {
+  lang: Lang;
+  /** Path after the language prefix, e.g. "" (home) or "services/online-store/". Same in both languages. */
+  path?: string;
+  title?: string;
+  description?: string;
+  image?: string;
+  /** Extra JSON-LD objects for this page. */
+  jsonLd?: object[];
+}
+const { lang, path = '', title, description, image, jsonLd = [] } = Astro.props;
 const t = ui[lang];
-const base = 'https://www.zero--nine.online';
-const canonical = lang === 'ar' ? `${base}/` : `${base}/en/`;
-const og = `${base}/og-image.jpg`;
+const arUrl = `${BASE}/${path}`;
+const enUrl = `${BASE}/en/${path}`;
+const canonical = lang === 'ar' ? arUrl : enUrl;
+const altHref = lang === 'ar' ? `/en/${path}` : `/${path}`;
+const pageTitle = title ?? t.metaTitle;
+const pageDesc = description ?? t.metaDesc;
+const og = image ?? `${BASE}/og-image.jpg`;
 
 const org = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
+  '@id': `${BASE}/#org`,
   name: 'Zero-Nine',
   alternateName: 'زيرو ناين',
-  url: `${base}/`,
-  logo: `${base}/logo.png`,
-  image: og,
+  url: `${BASE}/`,
+  logo: `${BASE}/logo.png`,
+  image: `${BASE}/og-image.jpg`,
   description: t.metaDesc,
   telephone: `+${site.contact.whatsapp}`,
   contactPoint: [site.contact.whatsapp, site.contact.whatsapp2].filter(Boolean).map((n) => ({
@@ -42,27 +60,18 @@ const org = {
   },
   sameAs: [site.contact.facebook].filter(Boolean),
 };
-const faqLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: site.faq.map((f: any) => ({
-    '@type': 'Question',
-    name: f[`q_${lang}`],
-    acceptedAnswer: { '@type': 'Answer', text: f[`a_${lang}`] },
-  })),
-};
 ---
 <!doctype html>
 <html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{t.metaTitle}</title>
-    <meta name="description" content={t.metaDesc} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="ar" href={`${base}/`} />
-    <link rel="alternate" hreflang="en" href={`${base}/en/`} />
-    <link rel="alternate" hreflang="x-default" href={`${base}/`} />
+    <link rel="alternate" hreflang="ar" href={arUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={arUrl} />
     <link rel="preload" href={lang === 'ar' ? cairoAr : cairoLa} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={lang === 'ar' ? messiriAr : messiriLa} as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="#0a0907" />
@@ -70,22 +79,23 @@ const faqLd = {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:title" content={t.metaTitle} />
-    <meta property="og:description" content={t.metaDesc} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
     <meta property="og:image" content={og} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={lang === 'ar' ? 'ar_EG' : 'en_US'} />
     <meta property="og:site_name" content="Zero-Nine" />
     <meta name="twitter:card" content="summary_large_image" />
     <script is:inline>document.documentElement.classList.add('js')</script>
     <script type="application/ld+json" set:html={JSON.stringify(org)} />
-    <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
+    {jsonLd.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
   </head>
   <body data-wa={site.contact.whatsapp}>
     <a class="skip" href="#main">{t.skip}</a>
     <div class="bg-glyphs" aria-hidden="true"></div>
+    <Header lang={lang} altHref={altHref} />
     <slot />
+    <Footer lang={lang} />
+    <WaFloat lang={lang} />
     <script>import '../scripts/main.ts';</script>
   </body>
 </html>
