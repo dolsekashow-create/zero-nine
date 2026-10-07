@@ -1,4 +1,3 @@
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const lang = document.documentElement.lang === 'en' ? 'en' : 'ar';
 const waNumber = document.body.dataset.wa ?? '';
@@ -23,7 +22,7 @@ addEventListener('keydown', (e) => e.key === 'Escape' && setMenu(false));
 /* ---------- Scroll reveals + count-up ---------- */
 const countUp = (el: HTMLElement) => {
   const target = Number(el.dataset.count);
-  if (!Number.isFinite(target) || reduceMotion) return;
+  if (!Number.isFinite(target)) return;
   const start = performance.now();
   const dur = 1600;
   const tick = (t: number) => {
@@ -74,7 +73,6 @@ if (calc) {
   const animateTo = (to: number) => {
     const from = shown;
     shown = to;
-    if (reduceMotion) { totalEl.textContent = fmt.format(to); return; }
     const start = performance.now();
     const step = (t: number) => {
       const p = Math.min((t - start) / 500, 1);

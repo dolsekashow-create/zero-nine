@@ -161,11 +161,9 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1000px;
   translate: calc(var(--r) * 3.2px) 0;
   background: radial-gradient(circle, #fff3c4 0%, rgba(244,212,124,.8) 30%, rgba(212,175,55,0) 70%);
   opacity: .8; }
-@media (prefers-reduced-motion: no-preference) {
-  .sparkles { animation: burst 1.8s var(--ease-out) both; }
-  .sparkles .orbit { animation: orbit var(--dur) linear infinite var(--dir); will-change: transform; }
-  .sparkles i { animation: twinkle var(--tw) ease-in-out var(--delay) infinite alternate; will-change: opacity, transform; }
-}
+.sparkles { animation: burst 1.8s var(--ease-out) both; }
+.sparkles .orbit { animation: orbit var(--dur) linear infinite var(--dir); will-change: transform; }
+.sparkles i { animation: twinkle var(--tw) ease-in-out var(--delay) infinite alternate; will-change: opacity, transform; }
 @media (max-width: 860px) { .sparkles i { translate: calc(var(--r) * 2.4px) 0; } .sparkles .orbit:nth-child(n+19) { display: none; } }
 .hero h1 { font-size: clamp(2.1rem, 5.2vw, 4rem); line-height: 1.25; }
 .hero h1 .hl { display: inline; }
@@ -178,10 +176,8 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1000px;
 [dir="rtl"] .pharaoh { transform: scaleX(-1); }
 .sun-disc { position: absolute; inset: 6% 2% auto; aspect-ratio: 1; z-index: -1; color: var(--gold-1); opacity: .55; }
 .sun-disc svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-@media (prefers-reduced-motion: no-preference) {
-  .sun-disc .ring-1 { animation: spin 80s linear infinite; will-change: transform; }
-  .sun-disc .ring-2 { animation: spin 120s linear infinite reverse; will-change: transform; }
-}
+.sun-disc .ring-1 { animation: spin 80s linear infinite; will-change: transform; }
+.sun-disc .ring-2 { animation: spin 120s linear infinite reverse; will-change: transform; }
 .scroll-hint { position: absolute; bottom: 22px; inset-inline-start: 50%; translate: -50% 0; width: 26px; height: 42px; border: 1px solid var(--line-strong); border-radius: 999px; }
 [dir="rtl"] .scroll-hint { translate: 50% 0; }
 .scroll-hint::after { content: ""; position: absolute; top: 8px; left: 50%; width: 4px; height: 8px; margin-left: -2px; border-radius: 4px; background: var(--gold-2); animation: scrollHint 1.8s var(--ease-in-out) infinite; }
@@ -199,13 +195,13 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1000px;
 }
 
 /* hero entrance: pure CSS, so it plays even before/without JS */
+.hero-logo img { animation: logoIn 1.4s var(--ease-out) both; }
+.hero .eyebrow { animation: fadeUp .9s var(--ease-out) .25s both; }
+.hero-sub { animation: fadeUp .9s var(--ease-out) .75s both; }
+.hero-ctas { animation: fadeUp .9s var(--ease-out) .9s both; }
+.hero-visual { animation: visualIn 1.6s var(--ease-out) .1s both; }
+.hero h1 .w > span { animation: wordUp .9s var(--ease-out) both; animation-delay: calc(.35s + var(--i) * 60ms); }
 @media (prefers-reduced-motion: no-preference) {
-  .hero-logo img { animation: logoIn 1.4s var(--ease-out) both; }
-  .hero .eyebrow { animation: fadeUp .9s var(--ease-out) .25s both; }
-  .hero-sub { animation: fadeUp .9s var(--ease-out) .75s both; }
-  .hero-ctas { animation: fadeUp .9s var(--ease-out) .9s both; }
-  .hero-visual { animation: visualIn 1.6s var(--ease-out) .1s both; }
-  .hero h1 .w > span { animation: wordUp .9s var(--ease-out) both; animation-delay: calc(.35s + var(--i) * 60ms); }
   .float { animation: float 7s ease-in-out infinite; will-change: transform; }
 }
 .hero h1 .w { display: inline-block; overflow: hidden; vertical-align: top; padding-block: .06em; margin-block: -.06em; }
@@ -426,10 +422,8 @@ a.wa-float:hover, .wa-float summary:hover { transform: scale(1.08); }
 .wa-menu a:hover { background: rgba(212,175,55,.1); }
 .wa-menu .icon { width: 26px; height: 26px; color: #25d366; }
 .wa-menu small { display: block; color: var(--text-dim); font-size: .78rem; line-height: 1.2; }
-@media (prefers-reduced-motion: no-preference) {
-  a.wa-float::before, .wa-float:not([open]) summary::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #25d366; animation: ping 2.4s var(--ease-out) infinite; }
-  .wa-float[open] .wa-menu { animation: fadeUp .3s var(--ease-out) both; }
-}
+a.wa-float::before, .wa-float:not([open]) summary::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #25d366; animation: ping 2.4s var(--ease-out) infinite; }
+.wa-float[open] .wa-menu { animation: fadeUp .3s var(--ease-out) both; }
 .phone-row { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 12px; }
 .phone-row small { flex-basis: 100%; }
 .call-link { font-size: .85rem; color: var(--gold-2); border-bottom: 1px solid var(--line-strong); }
@@ -445,20 +439,24 @@ a.wa-float:hover, .wa-float summary:hover { transform: scale(1.08); }
 
 /* process line: scrubs with scroll where supported */
 @supports (animation-timeline: view()) {
+  .process-line span { animation: grow linear both; animation-timeline: view(); animation-range: entry 20% cover 55%; }
   @media (prefers-reduced-motion: no-preference) {
-    .process-line span { animation: grow linear both; animation-timeline: view(); animation-range: entry 20% cover 55%; }
     .parallax { animation: drift linear both; animation-timeline: view(); }
   }
 }
 
+/* Reduced motion = a calm version, not a frozen page: battery-saver modes on many phones report
+   prefers-reduced-motion, so lots of real visitors land here. Keep fades, glitter and drawing;
+   drop travel (slide-ups, floating, parallax) and slow the marquee. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-  .js .reveal { opacity: 1; transform: none; }
-  .js .draw path { stroke-dashoffset: 0; }
-  .marquee-track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; }
+  html { scroll-behavior: auto; }
+  .js .reveal { transform: none; }
+  .hero .eyebrow, .hero-sub, .hero-ctas, .hero-visual, .hero h1 .w > span, .wa-float[open] .wa-menu { animation-name: fadeIn; }
+  .marquee-track { animation-duration: 90s; }
 }
 
 /* ============ Keyframes ============ */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: var(--vo, 1); } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 @keyframes wordUp { from { transform: translateY(110%); } to { transform: none; } }
 @keyframes logoIn { 0% { opacity: 0; transform: scale(.82); filter: drop-shadow(0 0 0 rgba(212,175,55,0)) brightness(2.2); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; filter: drop-shadow(0 0 24px rgba(212,175,55,.35)) brightness(1); } }
