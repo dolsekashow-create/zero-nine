@@ -1,0 +1,412 @@
+---
+import { Image, Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+import site from '../data/site.json';
+import { ui, services, process, calculator, pick, type Lang } from '../data/i18n';
+import logoMark from '../assets/brand/logo-mark.png';
+import logoFull from '../assets/brand/logo-full.png';
+import pharaoh from '../assets/brand/pharaoh.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const other = lang === 'ar' ? '/en/' : '/';
+const wa = (text: string) => `https://wa.me/${site.contact.whatsapp}?text=${encodeURIComponent(text)}`;
+const hostOf = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+
+const projects = (await getCollection('projects'))
+  .filter((p) => !p.data.hidden)
+  .sort((a, b) => a.data.order - b.data.order);
+
+// Hero title: split into words (never letters: Arabic letters must stay joined), mark the highlighted phrase in gold
+const title = pick(site.hero, 'title', lang);
+const hl = pick(site.hero, 'highlight', lang);
+const hlStart = hl ? title.indexOf(hl) : -1;
+let pos = 0;
+const words = title.split(' ').map((w: string) => {
+  const start = title.indexOf(w, pos);
+  pos = start + w.length;
+  const gold = hlStart >= 0 && start >= hlStart && start < hlStart + hl.length;
+  return { w, gold };
+});
+
+const perks = lang === 'ar'
+  ? [['ankh', 'ملكية كاملة', 'الكود والملفات ملكك 100%'], ['pyramid', 'سرعة تسليم', 'من 2 لـ 7 أيام حسب الباقة'], ['eye', 'تصميم قبل البرمجة', 'تشوف وتوافق قبل التنفيذ'], ['lotus', 'لوحة تحكم سهلة', 'تعدّل موقعك بنفسك']]
+  : [['ankh', 'Full ownership', 'Code and files are 100% yours'], ['pyramid', 'Fast delivery', '2 to 7 days by package'], ['eye', 'Design first', 'Approve it before we build'], ['lotus', 'Easy admin panel', 'Edit your site yourself']];
+
+// Gold glitter around the logo (CSS version of logo.mp4): deterministic pseudo-random values so builds are stable
+let seed = 9;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const sparks = Array.from({ length: 28 }, () => ({
+  r: Math.round(30 + rnd() * 22),
+  size: +(3 + rnd() * 6).toFixed(1),
+  dur: Math.round(28 + rnd() * 40),
+  dir: rnd() < 0.5 ? 'normal' : 'reverse',
+  start: Math.round(rnd() * 360),
+  tw: +(1.6 + rnd() * 2.6).toFixed(2),
+  delay: +(-rnd() * 4).toFixed(2),
+}));
+
+const initialTotal = calculator.groups.reduce((s, g) => s + g.options[0].price, 0);
+const nf = new Intl.NumberFormat('en-US');
+---
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href={lang === 'ar' ? '/' : '/en/'} aria-label="Zero-Nine">
+      <Image src={logoMark} alt="" width={80} widths={[40, 80]} sizes="40px" loading="eager" />
+      <span class="brand-name">ZERO-NINE</span>
+    </a>
+    <nav class="nav" id="nav" aria-label={t.menu}>
+      <ul>
+        <li><a href="#about">{t.nav.about}</a></li>
+        <li><a href="#services">{t.nav.services}</a></li>
+        <li><a href="#work">{t.nav.work}</a></li>
+        <li><a href="#pricing">{t.nav.pricing}</a></li>
+        <li><a href="#faq">{t.nav.faq}</a></li>
+        <li><a href="#contact">{t.nav.contact}</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <a class="lang" href={other} hreflang={lang === 'ar' ? 'en' : 'ar'} aria-label={`${t.langSwitch} — ${t.langSwitchLabel}`}>{t.langSwitch}</a>
+      <a class="btn btn-gold" href={wa(lang === 'ar' ? 'السلام عليكم، عايز أستفسر عن موقع.' : "Hello, I'd like to ask about a website.")} target="_blank" rel="noopener">
+        <Icon name="whatsapp" />{t.talk}
+      </a>
+      <button class="menu-btn" aria-controls="nav" aria-expanded="false" aria-label={t.menu}><Icon name="menu" /></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="home">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="hero-logo">
+          <div class="sparkles" aria-hidden="true">
+            {sparks.map((p) => (
+              <span class="orbit" style={`--dur:${p.dur}s;--dir:${p.dir};--start:${p.start}deg`}>
+                <i style={`--r:${p.r};--s:${p.size}px;--tw:${p.tw}s;--delay:${p.delay}s`}></i>
+              </span>
+            ))}
+          </div>
+          <Picture src={logoFull} alt="Zero-Nine — For Digital Solutions" formats={['avif', 'webp']} fallbackFormat="png" widths={[240, 480]} sizes="(max-width: 860px) 180px, 240px" loading="eager" />
+        </div>
+        <p class="eyebrow">{pick(site.hero, 'eyebrow', lang)}</p>
+        <h1>
+          {words.map((x: { w: string; gold: boolean }, i: number) => (
+            <><span class="w"><span style={`--i:${i}`} class={x.gold ? 'gold-text' : undefined}>{x.w}</span></span>{' '}</>
+          ))}
+        </h1>
+        <p class="hero-sub">{pick(site.hero, 'sub', lang)}</p>
+        <div class="hero-ctas">
+          <a class="btn btn-gold" href="#work">{t.seeWork}</a>
+          <a class="btn btn-ghost" href="#contact">{t.startProject}<Icon name="arrow" class="icon-dir" /></a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="sun-disc">
+          <svg viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="96" stroke-width=".6" opacity=".5" /><circle cx="100" cy="100" r="62" stroke-width=".5" opacity=".4" /></svg>
+          <svg class="ring-1" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="86" stroke-width=".8" stroke-dasharray="1 5" /></svg>
+          <svg class="ring-2" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="74" stroke-width="1" stroke-dasharray="18 6 2 6" opacity=".7" /></svg>
+        </div>
+        <div class="float" style="height:100%">
+          <Picture src={pharaoh} alt="" formats={['avif', 'webp']} fallbackFormat="jpg" widths={[360, 520, 624]} sizes="(max-width: 860px) 100vw, 520px" class="pharaoh" loading="eager" fetchpriority="high" />
+        </div>
+      </div>
+    </div>
+    <span class="scroll-hint" aria-hidden="true"></span>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="stats" aria-label="Zero-Nine">
+    <div class="wrap stats-grid" data-observe>
+      {site.stats.map((s: any) => (
+        <div class="stat">
+          <div class="stat-num gold-text"><span data-count={/^\d+$/.test(s.value) ? s.value : undefined}>{s.value}</span>{s.suffix}</div>
+          <div class="stat-label">{pick(s, 'label', lang)}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ CLIENTS MARQUEE ============ -->
+  <div class="marquee" aria-label={t.trustedBy}>
+    <p class="marquee-label">{t.trustedBy}</p>
+    <div class="marquee-track">
+      {[0, 1].map((dup) => projects.map((p) => <span class="marquee-item" aria-hidden={dup === 1 ? 'true' : undefined}>{p.data.name}</span>))}
+    </div>
+  </div>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section" id="about">
+    <div class="wrap about-grid">
+      <div class="about-copy reveal">
+        <p class="eyebrow">{t.aboutEyebrow}</p>
+        <h2>{t.aboutTitle}</h2>
+        {t.aboutBody.map((p) => <p>{p}</p>)}
+      </div>
+      <div class="perks">
+        {perks.map(([icon, title, desc], i) => (
+          <div class="perk reveal" style={`--d:${i}`}>
+            <Icon name={icon} class="draw" />
+            <div><strong>{title}</strong><span>{desc}</span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">{t.servicesEyebrow}</p>
+        <h2>{t.servicesTitle}</h2>
+        <p>{t.servicesSub}</p>
+      </div>
+      <div class="services-grid">
+        {services.map((s, i) => (
+          <article class="card reveal" style={`--d:${i % 3}`}>
+            <span class="num">0{i + 1}</span>
+            <Icon name={s.icon} class="draw" />
+            <h3>{s[lang][0]}</h3>
+            <p>{s[lang][1]}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section class="section" id="work">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">{pick(site, 'worksLabel', lang)}</p>
+        <h2>{t.workTitle}</h2>
+        <p>{t.workSub}</p>
+      </div>
+      <div class="work-grid">
+        {projects.map((p, i) => (
+          <a class="project reveal" style={`--d:${i % 4}`} href={p.data.url} target="_blank" rel="noopener" aria-label={`${p.data.name}: ${t.visit}`}>
+            <div class="project-media">
+              <span class="project-domain">{hostOf(p.data.url)}</span>
+              <Picture src={p.data.image} alt={`${p.data.name} — ${p.data.tag}`} formats={['avif', 'webp']} fallbackFormat="jpg" widths={[400, 640, 900]} sizes="(max-width: 1100px) 50vw, 300px" loading="lazy" decoding="async" />
+            </div>
+            <div class="project-body">
+              <div>
+                <h3>{p.data.name}</h3>
+                {p.data.tag && <span class="project-tag">{p.data.tag}</span>}
+              </div>
+              <span class="project-go"><Icon name="external" /></span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="section" id="process">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">{t.processEyebrow}</p>
+        <h2>{t.processTitle}</h2>
+      </div>
+      <div class="process-wrap">
+      <span class="process-line" aria-hidden="true"><span></span></span>
+      <ol class="process">
+        {process.map((s, i) => (
+          <li class="step reveal" style={`--d:${i}`}>
+            <span class="step-dot">{i + 1}</span>
+            <div><h3>{s[lang][0]}</h3><p>{s[lang][1]}</p></div>
+          </li>
+        ))}
+      </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="section" id="pricing">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">{t.pricingEyebrow}</p>
+        <h2>{t.pricingTitle}</h2>
+        <p>{t.pricingSub}</p>
+      </div>
+      <div class="pricing-grid">
+        {site.packages.map((p: any, i: number) => (
+          <article class:list={['plan reveal', { featured: p.featured }]} style={`--d:${i}`}>
+            {p.featured && <span class="plan-badge">{t.popular}</span>}
+            <h3>{pick(p, 'name', lang)}</h3>
+            <p class="plan-note">{pick(p, 'note', lang)}</p>
+            <div class="plan-price">
+              <span class="now gold-text">{nf.format(Number(p.price))}</span><span class="cur">{t.currency}</span>
+              {p.oldPrice && <del>{nf.format(Number(p.oldPrice))}</del>}
+            </div>
+            <span class="plan-delivery">⚡ {pick(p, 'delivery', lang)}</span>
+            <ul>
+              {(p[`features_${lang}`] ?? p.features_ar).map((f: string) => <li><Icon name="check" />{f}</li>)}
+            </ul>
+            <a class:list={['btn', p.featured ? 'btn-gold' : 'btn-ghost']} href={wa(t.orderMsg(pick(p, 'name', lang), nf.format(Number(p.price))))} target="_blank" rel="noopener">
+              <Icon name="whatsapp" />{t.order}
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CALCULATOR ============ -->
+  <section class="section" id="calculator">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">{t.calcEyebrow}</p>
+        <h2>{t.calcTitle}</h2>
+        <p>{t.calcSub}</p>
+      </div>
+      <div class="calc">
+        <form class="calc-panel reveal" id="calc-form" onsubmit="return false">
+          {calculator.groups.map((g) => (
+            <fieldset>
+              <legend>{g[lang]}</legend>
+              <div class="pills">
+                {g.options.map((o, i) => (
+                  <label class="pill">
+                    <input type="radio" name={g.id} value={o.price} data-label={o[lang]} checked={i === 0} />
+                    <span>{o[lang]}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ))}
+          <fieldset>
+            <legend>{calculator.addonsLabel[lang]}</legend>
+            <div class="pills">
+              {calculator.addons.map((a) => (
+                <label class="pill">
+                  <input type="checkbox" name="addon" value={a.price} data-label={a[lang]} />
+                  <span>{a[lang]} <small>+{nf.format(a.price)}</small></span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </form>
+        <div class="calc-result reveal" style="--d:1" aria-live="polite">
+          <div class="label">{t.calcResult}</div>
+          <div class="calc-total"><span class="gold-text" id="calc-total" data-initial={initialTotal}>{nf.format(initialTotal)}</span> <small style="font-size:.4em;color:var(--gold-2)">{t.currency}</small></div>
+          <p>{t.calcNote}</p>
+          <a class="btn btn-gold" id="calc-send" href={wa(t.calcTitle)} target="_blank" rel="noopener"><Icon name="whatsapp" />{t.calcCta}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">{t.faqEyebrow}</p>
+        <h2>{t.faqTitle}</h2>
+      </div>
+      <div class="faq">
+        {site.faq.map((f: any, i: number) => (
+          <details class="reveal" style={`--d:${Math.min(i, 3)}`} name="faq" open={i === 0}>
+            <summary>{pick(f, 'q', lang)}</summary>
+            <div class="answer"><p>{pick(f, 'a', lang)}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS (shown only when real ones are added in /admin) ============ -->
+  {site.testimonials.length > 0 && (
+    <section class="section" id="testimonials">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <p class="eyebrow">{t.testimonialsEyebrow}</p>
+          <h2>{t.testimonialsTitle}</h2>
+        </div>
+        <div class="quotes">
+          {site.testimonials.map((q: any, i: number) => (
+            <blockquote class="quote reveal" style={`--d:${i % 3}`}>
+              <p>“{pick(q, 'quote', lang)}”</p>
+              <footer><strong>{q.name}</strong>{pick(q, 'role', lang)}</footer>
+            </blockquote>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============ CONTACT ============ -->
+  <section class="section" id="contact">
+    <div class="wrap">
+      <div class="contact-box reveal">
+        <div class="contact-info">
+          <p class="eyebrow">{t.contactEyebrow}</p>
+          <h2>{t.contactTitle}</h2>
+          <p>{t.contactSub}</p>
+          <ul class="contact-list">
+            <li><Icon name="whatsapp" /><div><small>{t.whatsapp}</small><a class="ltr" href={`https://wa.me/${site.contact.whatsapp}`} target="_blank" rel="noopener">{site.contact.phoneDisplay}</a></div></li>
+            {site.contact.email && <li><Icon name="external" /><div><small>{t.email}</small><a class="ltr" href={`mailto:${site.contact.email}`}>{site.contact.email}</a></div></li>}
+            {site.contact.facebook && <li><Icon name="eye" /><div><small>{t.facebook}</small><a href={site.contact.facebook} target="_blank" rel="noopener">Zero-Nine</a></div></li>}
+            <li><Icon name="pyramid" /><div><small>{t.location}</small>{pick(site.contact, 'city', lang)}</div></li>
+            <li><Icon name="ankh" /><div><small>{t.hours}</small>{pick(site.contact, 'hours', lang)}</div></li>
+          </ul>
+        </div>
+        <form class="brief" id="brief">
+          <div class="field-row">
+            <div class="field"><label for="f-name">{t.form.name}</label><input id="f-name" name="name" required autocomplete="name" /></div>
+            <div class="field">
+              <label for="f-service">{t.form.service}</label>
+              <select id="f-service" name="service">
+                {services.map((s) => <option>{s[lang][0]}</option>)}
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-budget">{t.form.budget}</label>
+            <select id="f-budget" name="budget">{t.form.budgets.map((b) => <option>{b}</option>)}</select>
+          </div>
+          <div class="field"><label for="f-details">{t.form.details}</label><textarea id="f-details" name="details"></textarea></div>
+          <button class="btn btn-gold" type="submit"><Icon name="whatsapp" />{t.form.send}</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href={lang === 'ar' ? '/' : '/en/'}><Image src={logoMark} alt="" width={80} widths={[40, 80]} sizes="40px" /><span class="brand-name">ZERO-NINE</span></a>
+        <p>{t.footerAbout}</p>
+      </div>
+      <div>
+        <h3>Zero-Nine</h3>
+        <ul>
+          <li><a href="#about">{t.nav.about}</a></li>
+          <li><a href="#work">{t.nav.work}</a></li>
+          <li><a href="#pricing">{t.nav.pricing}</a></li>
+          <li><a href="#faq">{t.nav.faq}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>{t.nav.services}</h3>
+        <ul>{services.slice(0, 4).map((s) => <li><a href="#services">{s[lang][0]}</a></li>)}</ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {new Date().getFullYear()} Zero-Nine. {t.rights}.</span>
+      <span>{t.madeIn} 𓂀</span>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float" href={wa(lang === 'ar' ? 'السلام عليكم، عايز أستفسر عن موقع.' : "Hello, I'd like to ask about a website.")} target="_blank" rel="noopener" aria-label={t.whatsapp}>
+  <Icon name="whatsapp" />
+</a>

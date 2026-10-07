@@ -1,0 +1,116 @@
+{
+  "contact": {
+    "whatsapp": "201025256462",
+    "phoneDisplay": "01025256462",
+    "facebook": "https://www.facebook.com/profile.php?id=61585099956284",
+    "email": "",
+    "city_ar": "القاهرة، مصر",
+    "city_en": "Cairo, Egypt",
+    "hours_ar": "السبت - الخميس | 10ص - 7م",
+    "hours_en": "Sat - Thu | 10AM - 7PM"
+  },
+  "hero": {
+    "eyebrow_ar": "استوديو رقمي مصري",
+    "eyebrow_en": "An Egyptian digital studio",
+    "title_ar": "نصمم مواقع وتطبيقات تليق بعظمة الحضارة المصرية",
+    "highlight_ar": "مواقع وتطبيقات",
+    "title_en": "We build websites and apps worthy of Egypt's greatest civilization",
+    "highlight_en": "websites and apps",
+    "sub_ar": "تصميمات ويب احترافية تناسب نشاطك، وتطبيقات لشركتك وأعمالك. سريعة، فخمة، وجاهزة تجيبلك عملاء.",
+    "sub_en": "Professional web design tailored to your business, and apps for your company. Fast, premium, and built to bring you customers."
+  },
+  "stats": [
+    { "value": "93", "suffix": "+", "label_ar": "مشروع مسلّم", "label_en": "Projects delivered" },
+    { "value": "2-7", "suffix": "", "label_ar": "أيام للتسليم", "label_en": "Days to deliver" },
+    { "value": "3", "suffix": "", "label_ar": "شهور دعم مجاني", "label_en": "Months free support" },
+    { "value": "100", "suffix": "%", "label_ar": "ملكية كاملة للكود", "label_en": "Code ownership" }
+  ],
+  "worksLabel_ar": "أحدث أعمالنا",
+  "worksLabel_en": "Latest work",
+  "packages": [
+    {
+      "name_ar": "بيزك",
+      "name_en": "Basic",
+      "price": "2500",
+      "oldPrice": "4000",
+      "note_ar": "مناسب للأنشطة الصغيرة والأفراد",
+      "note_en": "For small businesses and individuals",
+      "delivery_ar": "التسليم من 2 لـ 3 أيام",
+      "delivery_en": "Delivered in 2-3 days",
+      "featured": false,
+      "features_ar": ["تصميم احترافي متجاوب", "حتى 5 صفحات", "نموذج تواصل + واتساب عائم", "استضافة لمدة سنة", "دعم فني مجاني 3 شهور"],
+      "features_en": ["Professional responsive design", "Up to 5 pages", "Contact form + floating WhatsApp", "1 year hosting", "3 months free support"]
+    },
+    {
+      "name_ar": "برو",
+      "name_en": "Pro",
+      "price": "4500",
+      "oldPrice": "7000",
+      "note_ar": "مناسب للشركات والمتاجر",
+      "note_en": "For companies and online stores",
+      "delivery_ar": "التسليم من 3 لـ 5 أيام",
+      "delivery_en": "Delivered in 3-5 days",
+      "featured": true,
+      "features_ar": ["متجر إلكتروني متكامل", "عدد منتجات غير محدود", "بوابة دفع إلكتروني", "لوحة تحكم لإدارة المنتجات", "ربط مع شركات الشحن", "تقارير ومبيعات"],
+      "features_en": ["Complete online store", "Unlimited products", "Online payment gateway", "Product management dashboard", "Shipping integration", "Sales reports"]
+    },
+    {
+      "name_ar": "إيليت",
+      "name_en": "Elite",
+      "price": "8000",
+      "oldPrice": "12000",
+      "note_ar": "مناسب للمشاريع الكبيرة",
+      "note_en": "For large projects",
+      "delivery_ar": "التسليم من 5 لـ 7 أيام",
+      "delivery_en": "Delivered in 5-7 days",
+      "featured": false,
+      "features_ar": ["سيستم إدارة شركات متكامل", "نظام صلاحيات وموظفين", "إدارة العملاء (CRM)", "تقارير وإحصائيات متقدمة", "نظام فواتير ومحاسبة", "حماية وأمان متقدم", "دعم فني VIP"],
+      "features_en": ["Complete company management system", "Roles & staff permissions", "Customer management (CRM)", "Advanced reports & analytics", "Invoicing & accounting", "Advanced security", "VIP support"]
+    }
+  ],
+  "faq": [
+    {
+      "q_ar": "كم يستغرق تنفيذ المشروع؟",
+      "a_ar": "حسب الباقة: الموقع التعريفي من 2 لـ 3 أيام، المتجر الإلكتروني من 3 لـ 5 أيام، والأنظمة من 5 لـ 7 أيام. المشاريع الخاصة أو الكبيرة نتفق معاك على جدول زمني واضح قبل البدء.",
+      "q_en": "How long does a project take?",
+      "a_en": "It depends on the package: a business website takes 2-3 days, an online store 3-5 days, and systems 5-7 days. For custom or larger projects we agree on a clear timeline before starting."
+    },
+    {
+      "q_ar": "ما هي طرق الدفع المتاحة؟",
+      "a_ar": "فودافون كاش، إنستاباي، أو تحويل بنكي. بندفع 50% مقدم لبدء الشغل و50% عند التسليم النهائي، والمشاريع الكبيرة ممكن تتقسم على مراحل.",
+      "q_en": "What payment methods do you accept?",
+      "a_en": "Vodafone Cash, InstaPay, or bank transfer. 50% upfront to start and 50% on final delivery. Larger projects can be split into milestones."
+    },
+    {
+      "q_ar": "هل تقدمون استضافة ودومين؟",
+      "a_ar": "أيوه، الاستضافة لمدة سنة متضمنة في باقة بيزك، ونقدر نوفّر الدومين والاستضافة لأي باقة تانية، أو نساعدك تشتريهم بنفسك ونظبطهملك.",
+      "q_en": "Do you provide hosting and a domain?",
+      "a_en": "Yes. One year of hosting is included in the Basic package, and we can provide a domain and hosting for any other package, or help you buy them yourself and set everything up."
+    },
+    {
+      "q_ar": "هل أحصل على حقوق ملكية الموقع كاملة؟",
+      "a_ar": "بكل تأكيد. بعد استلام كامل المبلغ، الموقع وكل ملفاته ملكك بالكامل، وبنسلّمك الكود المصدري وكل صلاحيات الوصول.",
+      "q_en": "Do I get full ownership of my website?",
+      "a_en": "Absolutely. Once paid in full, the website and all its files are entirely yours. We hand over the source code and full access."
+    },
+    {
+      "q_ar": "هل تقدمون صيانة بعد التسليم؟",
+      "a_ar": "أيوه، معاك 3 شهور دعم فني مجاني بعد التسليم لأي مشكلة في الكود، وبعدها في باقات صيانة شهرية تشمل التحديثات والنسخ الاحتياطي وإضافة المحتوى.",
+      "q_en": "Do you offer maintenance after delivery?",
+      "a_en": "Yes. You get 3 months of free technical support after delivery for any code issue, then optional monthly maintenance plans covering updates, backups and content changes."
+    },
+    {
+      "q_ar": "هل أقدر أعدّل الموقع بنفسي بعد التسليم؟",
+      "a_ar": "أيوه. بنوفّرلك لوحة تحكم سهلة تعدّل منها النصوص والصور والأسعار من غير أي خبرة برمجية، ومعاها فيديو قصير بيشرح الاستخدام.",
+      "q_en": "Can I edit the website myself?",
+      "a_en": "Yes. You get an easy admin panel to edit text, images and prices with no coding, plus a short video showing how to use it."
+    },
+    {
+      "q_ar": "ماذا لو لم أكن راضياً عن النتيجة؟",
+      "a_ar": "بنشتغل بنظام المراحل والموافقة: بتشوف التصميم قبل البرمجة، وبنعدّل حسب ملاحظاتك لحد الموافقة النهائية. التعديلات في مرحلة التصميم غير محدودة.",
+      "q_en": "What if I'm not happy with the result?",
+      "a_en": "We work in approved stages: you see the design before development, and we revise based on your feedback until final approval. Revisions during the design stage are unlimited."
+    }
+  ],
+  "testimonials": []
+}
