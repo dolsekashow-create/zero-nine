@@ -414,13 +414,27 @@ main > .section { content-visibility: auto; contain-intrinsic-size: auto 1000px;
 .footer-bottom { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; color: var(--text-dim); font-size: .88rem; }
 @media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-grid > :first-child { grid-column: 1 / -1; } }
 
-/* ============ Floating WhatsApp ============ */
-.wa-float { position: fixed; bottom: 20px; inset-inline-end: 20px; z-index: 40; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #fff; box-shadow: 0 10px 30px -8px rgba(37,211,102,.6); transition: transform var(--dur-med) var(--ease-out); }
+/* ============ Floating WhatsApp (with number chooser) ============ */
+.wa-float { position: fixed; bottom: 20px; inset-inline-end: 20px; z-index: 40; }
+a.wa-float, .wa-float summary { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #fff; box-shadow: 0 10px 30px -8px rgba(37,211,102,.6); transition: transform var(--dur-med) var(--ease-out); cursor: pointer; list-style: none; position: relative; }
+.wa-float summary::-webkit-details-marker { display: none; }
 .wa-float .icon { width: 30px; height: 30px; }
-.wa-float:hover { transform: scale(1.08); }
+a.wa-float:hover, .wa-float summary:hover { transform: scale(1.08); }
+.wa-menu { position: absolute; bottom: 70px; inset-inline-end: 0; width: 230px; padding: 12px; border-radius: var(--radius-sm); background: rgba(19,17,13,.97); border: 1px solid var(--line-strong); box-shadow: 0 20px 50px -20px #000; display: grid; gap: 6px; }
+.wa-menu strong { font-size: .9rem; color: var(--gold-2); padding: 2px 6px 6px; }
+.wa-menu a { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 10px; transition: background-color var(--dur-fast); }
+.wa-menu a:hover { background: rgba(212,175,55,.1); }
+.wa-menu .icon { width: 26px; height: 26px; color: #25d366; }
+.wa-menu small { display: block; color: var(--text-dim); font-size: .78rem; line-height: 1.2; }
 @media (prefers-reduced-motion: no-preference) {
-  .wa-float::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #25d366; animation: ping 2.4s var(--ease-out) infinite; }
+  a.wa-float::before, .wa-float:not([open]) summary::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #25d366; animation: ping 2.4s var(--ease-out) infinite; }
+  .wa-float[open] .wa-menu { animation: fadeUp .3s var(--ease-out) both; }
 }
+.phone-row { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 12px; }
+.phone-row small { flex-basis: 100%; }
+.call-link { font-size: .85rem; color: var(--gold-2); border-bottom: 1px solid var(--line-strong); }
+.send-to { border: 0; padding: 0; margin: 0; min-width: 0; }
+.send-to legend { font-weight: 600; font-size: .95rem; margin-bottom: 6px; }
 
 /* ============ Motion: scroll reveals (only hidden once JS is confirmed) ============ */
 .js .reveal { opacity: 0; transform: translateY(28px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); transition-delay: calc(var(--d, 0) * 80ms); }

@@ -13,6 +13,11 @@ const { lang } = Astro.props;
 const t = ui[lang];
 const other = lang === 'ar' ? '/en/' : '/';
 const wa = (text: string) => `https://wa.me/${site.contact.whatsapp}?text=${encodeURIComponent(text)}`;
+const phones = [
+  { wa: site.contact.whatsapp, display: site.contact.phoneDisplay },
+  { wa: site.contact.whatsapp2, display: site.contact.phoneDisplay2 },
+].filter((p) => p.wa);
+const hello = lang === 'ar' ? 'السلام عليكم، عايز أستفسر عن موقع.' : "Hello, I'd like to ask about a website.";
 const hostOf = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
 
 const projects = (await getCollection('projects'))
@@ -350,7 +355,16 @@ const nf = new Intl.NumberFormat('en-US');
           <h2>{t.contactTitle}</h2>
           <p>{t.contactSub}</p>
           <ul class="contact-list">
-            <li><Icon name="whatsapp" /><div><small>{t.whatsapp}</small><a class="ltr" href={`https://wa.me/${site.contact.whatsapp}`} target="_blank" rel="noopener">{site.contact.phoneDisplay}</a></div></li>
+            {phones.map((p, i) => (
+              <li>
+                <Icon name="whatsapp" />
+                <div class="phone-row">
+                  <small>{t.whatsapp}{phones.length > 1 && ` · ${t.line(i + 1)}`}</small>
+                  <a class="ltr" href={`https://wa.me/${p.wa}?text=${encodeURIComponent(hello)}`} target="_blank" rel="noopener">{p.display}</a>
+                  <a class="call-link" href={`tel:+${p.wa}`}>{t.call}</a>
+                </div>
+              </li>
+            ))}
             {site.contact.email && <li><Icon name="external" /><div><small>{t.email}</small><a class="ltr" href={`mailto:${site.contact.email}`}>{site.contact.email}</a></div></li>}
             {site.contact.facebook && <li><Icon name="eye" /><div><small>{t.facebook}</small><a href={site.contact.facebook} target="_blank" rel="noopener">Zero-Nine</a></div></li>}
             <li><Icon name="pyramid" /><div><small>{t.location}</small>{pick(site.contact, 'city', lang)}</div></li>
@@ -371,6 +385,16 @@ const nf = new Intl.NumberFormat('en-US');
             <label for="f-budget">{t.form.budget}</label>
             <select id="f-budget" name="budget">{t.form.budgets.map((b) => <option>{b}</option>)}</select>
           </div>
+          {phones.length > 1 && (
+            <fieldset class="send-to">
+              <legend>{t.sendTo}</legend>
+              <div class="pills">
+                {phones.map((p, i) => (
+                  <label class="pill"><input type="radio" name="to" value={p.wa} checked={i === 0} /><span class="ltr">{p.display}</span></label>
+                ))}
+              </div>
+            </fieldset>
+          )}
           <div class="field"><label for="f-details">{t.form.details}</label><textarea id="f-details" name="details"></textarea></div>
           <button class="btn btn-gold" type="submit"><Icon name="whatsapp" />{t.form.send}</button>
         </form>
@@ -407,6 +431,20 @@ const nf = new Intl.NumberFormat('en-US');
   </div>
 </footer>
 
-<a class="wa-float" href={wa(lang === 'ar' ? 'السلام عليكم، عايز أستفسر عن موقع.' : "Hello, I'd like to ask about a website.")} target="_blank" rel="noopener" aria-label={t.whatsapp}>
-  <Icon name="whatsapp" />
-</a>
+{phones.length > 1 ? (
+  <details class="wa-float">
+    <summary aria-label={t.chooseNumber}><Icon name="whatsapp" /></summary>
+    <div class="wa-menu">
+      <strong>{t.chooseNumber}</strong>
+      {phones.map((p, i) => (
+        <a href={`https://wa.me/${p.wa}?text=${encodeURIComponent(hello)}`} target="_blank" rel="noopener">
+          <Icon name="whatsapp" /><span><small>{t.line(i + 1)}</small><span class="ltr">{p.display}</span></span>
+        </a>
+      ))}
+    </div>
+  </details>
+) : (
+  <a class="wa-float" href={`https://wa.me/${phones[0].wa}?text=${encodeURIComponent(hello)}`} target="_blank" rel="noopener" aria-label={t.whatsapp}>
+    <Icon name="whatsapp" />
+  </a>
+)}

@@ -2,7 +2,7 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const lang = document.documentElement.lang === 'en' ? 'en' : 'ar';
 const waNumber = document.body.dataset.wa ?? '';
-const waLink = (text: string) => `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
+const waLink = (text: string, to = waNumber) => `https://wa.me/${to}?text=${encodeURIComponent(text)}`;
 const fmt = new Intl.NumberFormat('en-US');
 
 /* ---------- Header: solid background after scrolling, mobile menu ---------- */
@@ -112,5 +112,12 @@ brief?.addEventListener('submit', (e) => {
   const msg = [`${L.hi} ${g('name')}.`, `${L.need}: ${g('service')}`, `${L.budget}: ${g('budget')}`, g('details') && `${L.details}: ${g('details')}`]
     .filter(Boolean)
     .join('\n');
-  window.open(waLink(msg), '_blank', 'noopener');
+  window.open(waLink(msg, g('to') || waNumber), '_blank', 'noopener');
 });
+
+/* ---------- Close the WhatsApp number chooser on outside click / Escape ---------- */
+const waChooser = document.querySelector<HTMLDetailsElement>('details.wa-float');
+if (waChooser) {
+  document.addEventListener('click', (e) => { if (waChooser.open && !waChooser.contains(e.target as Node)) waChooser.open = false; });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') waChooser.open = false; });
+}

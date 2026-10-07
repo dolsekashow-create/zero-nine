@@ -2,6 +2,8 @@
   "contact": {
     "whatsapp": "201025256462",
     "phoneDisplay": "01025256462",
+    "whatsapp2": "201125472449",
+    "phoneDisplay2": "01125472449",
     "facebook": "https://www.facebook.com/profile.php?id=61585099956284",
     "email": "",
     "city_ar": "القاهرة، مصر",
@@ -20,10 +22,30 @@
     "sub_en": "Professional web design tailored to your business, and apps for your company. Fast, premium, and built to bring you customers."
   },
   "stats": [
-    { "value": "93", "suffix": "+", "label_ar": "مشروع مسلّم", "label_en": "Projects delivered" },
-    { "value": "2-7", "suffix": "", "label_ar": "أيام للتسليم", "label_en": "Days to deliver" },
-    { "value": "3", "suffix": "", "label_ar": "شهور دعم مجاني", "label_en": "Months free support" },
-    { "value": "100", "suffix": "%", "label_ar": "ملكية كاملة للكود", "label_en": "Code ownership" }
+    {
+      "value": "93",
+      "suffix": "+",
+      "label_ar": "مشروع مسلّم",
+      "label_en": "Projects delivered"
+    },
+    {
+      "value": "2-7",
+      "suffix": "",
+      "label_ar": "أيام للتسليم",
+      "label_en": "Days to deliver"
+    },
+    {
+      "value": "3",
+      "suffix": "",
+      "label_ar": "شهور دعم مجاني",
+      "label_en": "Months free support"
+    },
+    {
+      "value": "100",
+      "suffix": "%",
+      "label_ar": "ملكية كاملة للكود",
+      "label_en": "Code ownership"
+    }
   ],
   "worksLabel_ar": "أحدث أعمالنا",
   "worksLabel_en": "Latest work",
@@ -38,8 +60,20 @@
       "delivery_ar": "التسليم من 2 لـ 3 أيام",
       "delivery_en": "Delivered in 2-3 days",
       "featured": false,
-      "features_ar": ["تصميم احترافي متجاوب", "حتى 5 صفحات", "نموذج تواصل + واتساب عائم", "استضافة لمدة سنة", "دعم فني مجاني 3 شهور"],
-      "features_en": ["Professional responsive design", "Up to 5 pages", "Contact form + floating WhatsApp", "1 year hosting", "3 months free support"]
+      "features_ar": [
+        "تصميم احترافي متجاوب",
+        "حتى 5 صفحات",
+        "نموذج تواصل + واتساب عائم",
+        "استضافة لمدة سنة",
+        "دعم فني مجاني 3 شهور"
+      ],
+      "features_en": [
+        "Professional responsive design",
+        "Up to 5 pages",
+        "Contact form + floating WhatsApp",
+        "1 year hosting",
+        "3 months free support"
+      ]
     },
     {
       "name_ar": "برو",
@@ -51,8 +85,22 @@
       "delivery_ar": "التسليم من 3 لـ 5 أيام",
       "delivery_en": "Delivered in 3-5 days",
       "featured": true,
-      "features_ar": ["متجر إلكتروني متكامل", "عدد منتجات غير محدود", "بوابة دفع إلكتروني", "لوحة تحكم لإدارة المنتجات", "ربط مع شركات الشحن", "تقارير ومبيعات"],
-      "features_en": ["Complete online store", "Unlimited products", "Online payment gateway", "Product management dashboard", "Shipping integration", "Sales reports"]
+      "features_ar": [
+        "متجر إلكتروني متكامل",
+        "عدد منتجات غير محدود",
+        "بوابة دفع إلكتروني",
+        "لوحة تحكم لإدارة المنتجات",
+        "ربط مع شركات الشحن",
+        "تقارير ومبيعات"
+      ],
+      "features_en": [
+        "Complete online store",
+        "Unlimited products",
+        "Online payment gateway",
+        "Product management dashboard",
+        "Shipping integration",
+        "Sales reports"
+      ]
     },
     {
       "name_ar": "إيليت",
@@ -64,8 +112,24 @@
       "delivery_ar": "التسليم من 5 لـ 7 أيام",
       "delivery_en": "Delivered in 5-7 days",
       "featured": false,
-      "features_ar": ["سيستم إدارة شركات متكامل", "نظام صلاحيات وموظفين", "إدارة العملاء (CRM)", "تقارير وإحصائيات متقدمة", "نظام فواتير ومحاسبة", "حماية وأمان متقدم", "دعم فني VIP"],
-      "features_en": ["Complete company management system", "Roles & staff permissions", "Customer management (CRM)", "Advanced reports & analytics", "Invoicing & accounting", "Advanced security", "VIP support"]
+      "features_ar": [
+        "سيستم إدارة شركات متكامل",
+        "نظام صلاحيات وموظفين",
+        "إدارة العملاء (CRM)",
+        "تقارير وإحصائيات متقدمة",
+        "نظام فواتير ومحاسبة",
+        "حماية وأمان متقدم",
+        "دعم فني VIP"
+      ],
+      "features_en": [
+        "Complete company management system",
+        "Roles & staff permissions",
+        "Customer management (CRM)",
+        "Advanced reports & analytics",
+        "Invoicing & accounting",
+        "Advanced security",
+        "VIP support"
+      ]
     }
   ],
   "faq": [

@@ -25,6 +25,12 @@ const org = {
   image: og,
   description: t.metaDesc,
   telephone: `+${site.contact.whatsapp}`,
+  contactPoint: [site.contact.whatsapp, site.contact.whatsapp2].filter(Boolean).map((n) => ({
+    '@type': 'ContactPoint',
+    telephone: `+${n}`,
+    contactType: 'customer service',
+    availableLanguage: ['Arabic', 'English'],
+  })),
   priceRange: '$$',
   areaServed: 'EG',
   address: { '@type': 'PostalAddress', addressLocality: 'Cairo', addressCountry: 'EG' },

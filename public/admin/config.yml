@@ -46,6 +46,8 @@ collections:
             fields:
               - { name: whatsapp, label: "رقم الواتساب بالصيغة الدولية (201xxxxxxxxx)", widget: string }
               - { name: phoneDisplay, label: الرقم كما يظهر, widget: string }
+              - { name: whatsapp2, label: "الرقم التاني بالصيغة الدولية (اختياري)", widget: string, required: false }
+              - { name: phoneDisplay2, label: الرقم التاني كما يظهر, widget: string, required: false }
               - { name: facebook, label: رابط فيسبوك, widget: string, required: false }
               - { name: email, label: الإيميل, widget: string, required: false }
               - { name: city_ar, label: المدينة (عربي), widget: string }
