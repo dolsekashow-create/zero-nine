@@ -87,7 +87,7 @@ export function page(res, status, title, body) {
 <style>
 body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b0d1a;color:#f4f1e6;
 font-family:system-ui,"Segoe UI",Tahoma,sans-serif;padding:16px;box-sizing:border-box}
-main{max-width:440px;width:100%;background:#14172b;border:1px solid #2b2f4d;border-radius:20px;padding:28px 22px;text-align:center}
+main{max-width:440px;width:100%;box-sizing:border-box;background:#14172b;border:1px solid #2b2f4d;border-radius:20px;padding:28px 22px;text-align:center}
 h1{font-size:22px;margin:0 0 10px;color:#e9c46a}p{line-height:1.8;color:#c9c6d6;margin:8px 0}
 .code{direction:ltr;font:700 24px ui-monospace,Consolas,monospace;letter-spacing:1px;background:#0b0d1a;
 border:1px dashed #e9c46a;border-radius:14px;padding:16px 8px;margin:18px 0;color:#fff;user-select:all}
