@@ -9,6 +9,20 @@ public_folder: /src/assets/projects
 site_url: https://www.zero--nine.online
 locale: ar
 
+# Shrink uploads in the browser before committing: big PNG screenshots become ~150 KB WebP.
+# Large base64 uploads were failing to save with "Failed to fetch".
+media_libraries:
+  default:
+    config:
+      max_file_size: 15000000
+      slugify_filename: true
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 1600
+          height: 1600
+
 collections:
   - name: projects
     label: سابقة الأعمال
