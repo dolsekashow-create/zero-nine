@@ -3,5 +3,9 @@
   "tag": "Delta Smart",
   "url": "https://www.deltasmartsys.com/",
   "image": "/src/assets/projects/01-deltasmartsys.jpg",
-  "order": 1
+  "order": 2,
+  "hidden": false,
+  "service": "web-development",
+  "summary_ar": "",
+  "summary_en": ""
 }
