@@ -7,7 +7,6 @@ backend:
 media_folder: src/assets/projects
 public_folder: /src/assets/projects
 site_url: https://www.zero--nine.online
-locale: ar
 
 # Shrink uploads in the browser before committing: big PNG screenshots become ~150 KB WebP.
 # Large base64 uploads were failing to save with "Failed to fetch".
@@ -35,7 +34,15 @@ collections:
     identifier_field: name
     slug: "{{slug}}"
     summary: "{{order}} · {{name}} — {{tag}}"
-    sortable_fields: [order, name]
+    # list shows projects in the same order as the website
+    sortable_fields:
+      fields: [order, name]
+      default:
+        field: order
+        direction: ascending
+    view_filters:
+      - { label: الظاهر على الموقع, field: hidden, pattern: false }
+      - { label: المخفي, field: hidden, pattern: true }
     media_folder: /src/assets/projects
     public_folder: /src/assets/projects
     fields:
